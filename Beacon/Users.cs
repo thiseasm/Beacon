@@ -18,7 +18,7 @@ namespace Beacon
         
     }
 
-    internal class Guest : User
+    internal class Guest : User, ViewHistory
     {
         public Guest(string Name, string Pass, Authorization Authority)
         {
@@ -26,30 +26,54 @@ namespace Beacon
             PassWord = Pass;
             Rank = Authority;
         }
-     
+
+        public void View()
+        {
+            throw new NotImplementedException();
+        }
     }
     //TODO add Interfaces
-    internal class Member : Guest
+    internal class Member : Guest, EditMessage
     {
         public Member(string Name, string Pass, Authorization Authority) : base(Name, Pass, Authorization.Member)
         {
 
         }
+
+        public void Edit()
+        {
+            throw new NotImplementedException();
+        }
     }
 
-    internal class Trusted : Member
+    internal class Trusted : Member, DeleteMessage
     {
         public Trusted(string Name, string Pass, Authorization Authority) : base(Name, Pass, Authorization.Trusted)
         {
 
         }
+
+        public void Delete()
+        {
+            throw new NotImplementedException();
+        }
     }
 
-    internal class Admin : Trusted
+    internal class Admin : Trusted, GiveAuthority
     {
         public Admin(string Name, string Pass, Authorization Authority) : base(Name, Pass, Authorization.Administrator)
         {
 
+        }
+
+        public void Demote()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Promote()
+        {
+            throw new NotImplementedException();
         }
     }
 }
