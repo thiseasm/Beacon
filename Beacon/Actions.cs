@@ -26,4 +26,9 @@ namespace Beacon
         void Promote();
         void Demote();
     }
+
+    interface CreateUser
+    {
+        void Create();
+    }
 }

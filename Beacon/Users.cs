@@ -59,11 +59,16 @@ namespace Beacon
         }
     }
 
-    internal class Admin : Trusted, GiveAuthority
+    internal class Admin : Trusted, GiveAuthority, CreateUser
     {
         public Admin(string Name, string Pass, Authorization Authority) : base(Name, Pass, Authorization.Administrator)
         {
 
+        }
+
+        public void Create()
+        {
+            throw new NotImplementedException();
         }
 
         public void Demote()
