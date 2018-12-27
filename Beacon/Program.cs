@@ -3,14 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Data.SqlClient;
+using Dapper;
 
 namespace Beacon
 {
+
     
 
     class Program
     {
         //TODO fix classes 
+
+        static string connectionString = "Server=.;Database=Beacon;Integrated Security=SSPI;";
 
         static void Main(string[] args)
         {
@@ -22,6 +27,7 @@ namespace Beacon
             Console.WriteLine("R - Register");
             Console.WriteLine("X - Terminate");
             Console.WriteLine("==============");
+
 
             string Selection = Console.ReadLine();
 
@@ -36,9 +42,35 @@ namespace Beacon
                 case "R":
                 case "r":
 
-                    Console.WriteLine("Please pick a username:");
-                    string Name = Console.ReadLine();
-                    //TODO check for username duplication
+                    bool NameDuplicate = false;
+                    string Name;
+
+                    do
+                    {
+                        Console.WriteLine("Please pick a username:");
+                        Name = Console.ReadLine();
+                        //TODO check for usernameduplication
+
+                        SqlConnection dbcon = new SqlConnection(connectionString);
+
+                        using (dbcon)
+                        {
+                            dbcon.Open();
+                            var UsernameCheck = dbcon.Query("SELECT * FROM Accounts WHERE Username = @Username", new { Username = Name });
+
+                            if (UsernameCheck != null)
+                            {
+                                Console.WriteLine("This Username is already taken!");
+                                Console.WriteLine("Please choose something else.");
+                                NameDuplicate = true;
+                            }
+                            else
+                            {
+                                NameDuplicate = false;
+                            }
+                        }
+                    } while (NameDuplicate == false);
+                    
 
                     string Pass1;
                     string Pass2;
