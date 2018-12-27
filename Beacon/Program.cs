@@ -15,7 +15,7 @@ namespace Beacon
     {
         //TODO fix classes 
 
-        static string connectionString = "Server=.;Database=Beacon;Integrated Security=SSPI;";
+        static string connectionString = @"Server=THISEAS-PC\SQLExpress;Database=Beacon;Integrated Security=true;";
 
         static void Main(string[] args)
         {
