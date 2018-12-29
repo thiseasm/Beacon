@@ -15,7 +15,10 @@ namespace Beacon
     {
         //TODO fix classes 
 
-        static string connectionString = @"Server=THISEAS-PC\SQLExpress;Database=Beacon;Integrated Security=true;";
+        static string connectionString = "Server=THISEAS-PC\\SQLExpress;Database=Beacon;Integrated Security=true;";
+
+        
+
 
         static void Main(string[] args)
         {
@@ -28,6 +31,7 @@ namespace Beacon
             Console.WriteLine("X - Terminate");
             Console.WriteLine("==============");
 
+            SqlConnection dbcon = new SqlConnection(connectionString);
 
             string Selection = Console.ReadLine();
 
@@ -42,34 +46,19 @@ namespace Beacon
                 case "R":
                 case "r":
 
-                    bool NameDuplicate = false;
-                    string Name;
+                    bool NameOriginal = false;
+                    string Name="";
 
-                    do
+                    while (NameOriginal == false)
                     {
                         Console.WriteLine("Please pick a username:");
                         Name = Console.ReadLine();
                         //TODO check for usernameduplication
 
-                        SqlConnection dbcon = new SqlConnection(connectionString);
+                        NameOriginal = Namecheck(Name);
 
-                        using (dbcon)
-                        {
-                            dbcon.Open();
-                            var UsernameCheck = dbcon.Query("SELECT * FROM Accounts WHERE Username = @Username", new { Username = Name });
-
-                            if (UsernameCheck != null)
-                            {
-                                Console.WriteLine("This Username is already taken!");
-                                Console.WriteLine("Please choose something else.");
-                                NameDuplicate = true;
-                            }
-                            else
-                            {
-                                NameDuplicate = false;
-                            }
-                        }
-                    } while (NameDuplicate == false);
+                        
+                    } 
                     
 
                     string Pass1;
@@ -111,5 +100,32 @@ namespace Beacon
             }
             
         }
+
+        static bool Namecheck (string Name)
+        {
+            SqlConnection dbcon = new SqlConnection(connectionString);
+            bool NameOriginal;
+
+            using (dbcon)
+            {
+                dbcon.Open();
+                var UsernameCheck = dbcon.Query("SELECT * FROM Accounts WHERE Username = @Username;", new { Username = Name }).Count();
+
+                if (UsernameCheck == 1)
+                {
+                    Console.WriteLine("This Username is already taken!");
+                    Console.WriteLine("Please choose something else.");
+                    NameOriginal = false;
+                    
+                }
+                else
+                {
+                    NameOriginal = true;
+                }
+
+                return NameOriginal;
+            }
+        }
+
     }
 }
