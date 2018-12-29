@@ -53,7 +53,7 @@ namespace Beacon
                     {
                         Console.WriteLine("Please pick a username:");
                         Name = Console.ReadLine();
-                        //TODO check for usernameduplication
+                        
 
                         NameOriginal = Namecheck(Name);
 
@@ -81,7 +81,19 @@ namespace Beacon
 
                     Guest guest = new Guest(Name, Pass1, Authorization.Guest);
 
-                    //TODO add BASE interaction
+                    
+
+                    using (dbcon)
+                    {
+                        dbcon.Open();
+
+                        string RegistrationQuery = "INSERT INTO Accounts (Username,Rank) VALUES (@name, @guest);";
+                        var AccountInsertion = dbcon.Query(RegistrationQuery, new { name = Name, guest = "Guest"});
+
+                        //TODO ADD PASSWORD ENCRYPTION
+                        string PassQuery = "INSERT INTO Credentials (Username,Password) VALUES (@name, @pass);";
+                        var PassInsertion = dbcon.Query(PassQuery, new { name = Name , pass = Pass1 });
+                    }
 
                     Console.WriteLine($"The user {Name} has been created.");
                     Console.WriteLine("Please reopen the application to login with your credentials.");                    
@@ -89,6 +101,11 @@ namespace Beacon
                     Console.ReadKey();
                     Environment.Exit(0);
                     break;
+
+                case "L":
+                case "l":
+
+                    //TODO add login sequence
 
 
 
@@ -125,6 +142,11 @@ namespace Beacon
 
                 return NameOriginal;
             }
+        }
+
+        static void Registration(Guest guest)
+        {
+            
         }
 
     }
