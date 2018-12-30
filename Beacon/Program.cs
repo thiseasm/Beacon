@@ -93,9 +93,26 @@ namespace Beacon
                 case "l":
 
                     //TODO add login sequence
-                    string Username = Console.ReadLine();
+                    bool UserInBase = true;
 
-                    Console.WriteLine("Please input your Username:");
+                    while (UserInBase != false)
+                    {
+                        Console.WriteLine("Please input your Username:");
+                        string Username = Console.ReadLine();
+
+                        UserInBase = Namecheck(Username);
+
+                        if (UserInBase == true)
+                        {
+                            Console.WriteLine($"The user {Username} does not exist!");
+                        }
+                                                                            
+                    }
+
+                    
+
+
+
 
 
 
