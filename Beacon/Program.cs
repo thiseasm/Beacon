@@ -54,9 +54,13 @@ namespace Beacon
                         Console.WriteLine("Please pick a username:");
                         Name = Console.ReadLine();
                         
-
                         NameOriginal = Namecheck(Name);
 
+                        if (NameOriginal == false)
+                        {
+                            Console.WriteLine("This Username is already taken!");
+                            Console.WriteLine("Please choose something else.");
+                        }
                         
                     } 
                     
@@ -66,12 +70,14 @@ namespace Beacon
 
                     do
                     {
+
+                        //TODO ADD PASSWORD MASKING
                         Console.WriteLine("Please pick a password:");
                         Pass1 = Console.ReadLine();
 
                         Console.WriteLine("Please enter your password a second time:");
                         Pass2 = Console.ReadLine();
-
+                        
                         if (Pass1 != Pass2)
                         {
                             Console.WriteLine("The passwords do not match!");
@@ -79,33 +85,23 @@ namespace Beacon
 
                     } while (Pass1 != Pass2);
 
-                    Guest guest = new Guest(Name, Pass1, Authorization.Guest);
-
-                    
-
-                    using (dbcon)
-                    {
-                        dbcon.Open();
-
-                        string RegistrationQuery = "INSERT INTO Accounts (Username,Rank) VALUES (@name, @guest);";
-                        var AccountInsertion = dbcon.Query(RegistrationQuery, new { name = Name, guest = "Guest"});
-
-                        //TODO ADD PASSWORD ENCRYPTION
-                        string PassQuery = "INSERT INTO Credentials (Username,Password) VALUES (@name, @pass);";
-                        var PassInsertion = dbcon.Query(PassQuery, new { name = Name , pass = Pass1 });
-                    }
-
-                    Console.WriteLine($"The user {Name} has been created.");
-                    Console.WriteLine("Please reopen the application to login with your credentials.");                    
-                    Console.WriteLine("Press ANY key to terminate:");
-                    Console.ReadKey();
-                    Environment.Exit(0);
+                    Registration(Name, Pass1);                 
+                   
                     break;
 
                 case "L":
                 case "l":
 
                     //TODO add login sequence
+                    string Username = Console.ReadLine();
+
+                    Console.WriteLine("Please input your Username:");
+
+
+
+
+
+
 
 
 
@@ -130,8 +126,7 @@ namespace Beacon
 
                 if (UsernameCheck == 1)
                 {
-                    Console.WriteLine("This Username is already taken!");
-                    Console.WriteLine("Please choose something else.");
+                    
                     NameOriginal = false;
                     
                 }
@@ -144,9 +139,26 @@ namespace Beacon
             }
         }
 
-        static void Registration(Guest guest)
+        static void Registration(string Name, string Pass1)
         {
-            
+            SqlConnection dbcon = new SqlConnection(connectionString);
+            using (dbcon)
+            {
+                dbcon.Open();
+
+                string RegistrationQuery = "INSERT INTO Accounts (Username,Rank) VALUES (@name, @guest);";
+                var AccountInsertion = dbcon.Query(RegistrationQuery, new { name = Name, guest = "Guest" });
+
+                //TODO ADD PASSWORD ENCRYPTION
+                string PassQuery = "INSERT INTO Credentials (Username,Password) VALUES (@name, @pass);";
+                var PassInsertion = dbcon.Query(PassQuery, new { name = Name, pass = Pass1 });
+            }
+
+            Console.WriteLine($"The user {Name} has been created.");
+            Console.WriteLine("Please reopen the application to login with your credentials.");
+            Console.WriteLine("Press ANY key to terminate:");
+            Console.ReadKey();
+            Environment.Exit(0);
         }
 
     }
