@@ -27,8 +27,10 @@ namespace Beacon
         void Demote();
     }
 
-    interface CreateUser
+    interface UserManipulation
     {
         void Create();
+        void Destroy();
+        void Update();
     }
 }

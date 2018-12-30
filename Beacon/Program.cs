@@ -92,7 +92,6 @@ namespace Beacon
                 case "L":
                 case "l":
 
-                    //TODO add login sequence
                     bool UserInBase = true;
 
                     string Username = "";

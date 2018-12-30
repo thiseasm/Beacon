@@ -8,12 +8,10 @@ namespace Beacon
 {
     enum Authorization { Guest, Member, Trusted, Administrator };
 
-    //TODO Add UserID
     internal abstract class User
     {
 
         protected string UserName;
-        protected string PassWord;
         protected Authorization Rank;
         
     }
@@ -58,7 +56,7 @@ namespace Beacon
         }
     }
 
-    internal class Admin : Trusted, GiveAuthority, CreateUser
+    internal class Admin : Trusted, GiveAuthority, UserManipulation
     {
         public Admin(string Name, Authorization Authority) : base(Name, Authorization.Administrator)
         {
@@ -75,7 +73,17 @@ namespace Beacon
             throw new NotImplementedException();
         }
 
+        public void Destroy()
+        {
+            throw new NotImplementedException();
+        }
+
         public void Promote()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Update()
         {
             throw new NotImplementedException();
         }
