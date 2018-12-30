@@ -20,10 +20,9 @@ namespace Beacon
 
     internal class Guest : User, ViewHistory
     {
-        public Guest(string Name, string Pass, Authorization Authority)
+        public Guest(string Name, Authorization Authority)
         {
-            UserName = Name;
-            PassWord = Pass;
+            UserName = Name;         
             Rank = Authority;
         }
 
@@ -35,7 +34,7 @@ namespace Beacon
     //TODO add Interfaces
     internal class Member : Guest, EditMessage
     {
-        public Member(string Name, string Pass, Authorization Authority) : base(Name, Pass, Authorization.Member)
+        public Member(string Name,  Authorization Authority) : base(Name,  Authorization.Member)
         {
 
         }
@@ -48,7 +47,7 @@ namespace Beacon
 
     internal class Trusted : Member, DeleteMessage
     {
-        public Trusted(string Name, string Pass, Authorization Authority) : base(Name, Pass, Authorization.Trusted)
+        public Trusted(string Name,  Authorization Authority) : base(Name,  Authorization.Trusted)
         {
 
         }
@@ -61,7 +60,7 @@ namespace Beacon
 
     internal class Admin : Trusted, GiveAuthority, CreateUser
     {
-        public Admin(string Name, string Pass, Authorization Authority) : base(Name, Pass, Authorization.Administrator)
+        public Admin(string Name, Authorization Authority) : base(Name, Authorization.Administrator)
         {
 
         }

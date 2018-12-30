@@ -95,10 +95,13 @@ namespace Beacon
                     //TODO add login sequence
                     bool UserInBase = true;
 
-                    while (UserInBase != false)
+                    string Username = "";
+
+
+                    while (UserInBase == true)
                     {
                         Console.WriteLine("Please input your Username:");
-                        string Username = Console.ReadLine();
+                        Username = Console.ReadLine();
 
                         UserInBase = Namecheck(Username);
 
@@ -109,7 +112,40 @@ namespace Beacon
                                                                             
                     }
 
+                    CredentialCheck(Username);
+
                     
+
+                    using (dbcon)
+                    {
+                        dbcon.Open();
+
+                        string AuthorityCheck = dbcon.Query("SELECT Rank FROM Accounts WHERE Username = @name;", new { name = Username }).ToString();
+
+                        switch (AuthorityCheck)
+                        {
+                            case "Guest":
+                                Guest guest = new Guest(Username, Authorization.Guest);
+                                break;
+                            case "Member":
+                                Member member = new Member(Username, Authorization.Member);
+                                break;
+                            case "Trusted":
+                                Trusted trusted = new Trusted(Username, Authorization.Trusted);
+                                break;
+                            case "Administrator":
+                                Admin admin = new Admin(Username, Authorization.Administrator);
+                                break;
+                        }
+                    }
+
+                    Console.WriteLine("Login Successful!");
+                    Console.WriteLine($"Welcome back {Username}");                  
+                    
+                    break;
+
+
+
 
 
 
@@ -178,5 +214,35 @@ namespace Beacon
             Environment.Exit(0);
         }
 
+        static bool CredentialCheck(string Username)
+        {
+            //TODO ADD PASSWORD MASKING            
+
+            SqlConnection dbcon = new SqlConnection(connectionString);            
+            
+            using (dbcon)
+            {
+                dbcon.Open();
+                while (true)
+                {
+                    Console.WriteLine("Please input your Password:");
+                    string Password = Console.ReadLine();
+                    var PaperCheck = dbcon.Query("SELECT * FROM Credentials WHERE Username = @name AND Password = @pass;", new { name = Username, pass = Password }).Count();
+
+                    if (PaperCheck == 1)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Password is incorrect!");
+                        Console.WriteLine("Access Denied!");
+                    }
+                }
+                   
+            }
+            
+           
+        }
     }
 }
