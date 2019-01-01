@@ -28,8 +28,8 @@ namespace Beacon
 
     interface GiveAuthority
     {
-        void Promote();
-        void Demote();
+        void Promote(string User2);
+        void Demote(string User2);
     }
 
     interface UserManipulation

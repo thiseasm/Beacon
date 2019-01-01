@@ -149,6 +149,8 @@ namespace Beacon
                     break;
 
             }
+
+            //TODO ADD MENU AFTER LOGIN
             
         }
 

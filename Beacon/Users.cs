@@ -77,6 +77,9 @@ namespace Beacon
     //TODO add Interfaces
     internal class Member : Guest, EditMessage
     {
+
+        string connectionString = "Server=THISEAS-PC\\SQLExpress;Database=Beacon;Integrated Security=true;";
+
         public Member(string Name,  Authorization Authority) : base(Name,  Authorization.Member)
         {
 
@@ -90,6 +93,8 @@ namespace Beacon
 
     internal class Trusted : Member, DeleteMessage
     {
+        string connectionString = "Server=THISEAS-PC\\SQLExpress;Database=Beacon;Integrated Security=true;";
+
         public Trusted(string Name,  Authorization Authority) : base(Name,  Authorization.Trusted)
         {
 
@@ -103,6 +108,8 @@ namespace Beacon
 
     internal class Admin : Trusted, GiveAuthority, UserManipulation
     {
+        string connectionString = "Server=THISEAS-PC\\SQLExpress;Database=Beacon;Integrated Security=true;";
+
         public Admin(string Name, Authorization Authority) : base(Name, Authorization.Administrator)
         {
 
@@ -113,9 +120,46 @@ namespace Beacon
             throw new NotImplementedException();
         }
 
-        public void Demote()
+        public void Demote(string User2)
         {
-            throw new NotImplementedException();
+            SqlConnection dbcon = new SqlConnection(connectionString);
+            string Rank;
+
+            using (dbcon)
+            {
+                dbcon.Open();
+
+                Rank = dbcon.Query("SELECT Rank FROM Accounts WHERE Username = @name", new { name = User2 }).ToString();
+            }
+
+            string NewRank = "";
+
+            if (Rank == "Administrator")
+            {
+                NewRank = NewRank + "Trusted";
+            }
+            else if (Rank == "Trusted")
+            {
+                NewRank = NewRank + "Member";
+            }
+            else if (Rank == "Member")
+            {
+                NewRank = NewRank + "Guest";
+            }
+            else
+            {
+                Console.WriteLine($"{User2} cannot be demoted further!");
+                return;
+            }
+
+            using (dbcon)
+            {
+                dbcon.Open();
+
+                var Demotion = dbcon.Query("UPDATE TABLE Accounts SET Rank = @newrank WHERE Username = @name", new { newrank = NewRank, name = User2 });
+            }
+
+            Console.WriteLine($"{User2} has been demoted to {NewRank}!");
         }
 
         public void Destroy()
@@ -123,9 +167,46 @@ namespace Beacon
             throw new NotImplementedException();
         }
 
-        public void Promote()
+        public void Promote(string User2)
         {
-            throw new NotImplementedException();
+            SqlConnection dbcon = new SqlConnection(connectionString);
+            string Rank;
+
+            using (dbcon)
+            {
+                dbcon.Open();
+
+                Rank = dbcon.Query("SELECT Rank FROM Accounts WHERE Username = @name", new { name = User2 }).ToString();
+            }
+
+            string NewRank ="";
+
+            if (Rank == "Guest")
+            {
+                NewRank = NewRank + "Member";
+            }
+            else if (Rank == "Member")
+            {
+                NewRank = NewRank + "Trusted";
+            }
+            else if (Rank == "Trusted")
+            {
+                NewRank = NewRank + "Administrator";
+            }
+            else
+            {
+                Console.WriteLine($"{User2} cannot be promoted further!");
+                return;
+            }
+
+            using (dbcon)
+            {
+                dbcon.Open();
+
+                var Promotion = dbcon.Query("UPDATE TABLE Accounts SET Rank = @newrank WHERE Username = @name", new { newrank = NewRank, name = User2 });
+            }
+
+            Console.WriteLine($"{User2} has been promoted to {NewRank}!");
         }
 
         public void Update()
