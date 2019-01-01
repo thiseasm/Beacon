@@ -8,12 +8,12 @@ namespace Beacon
 {
     interface SendMessage
     {
-        void Send(string Recipient);
+        void Send(string User2);
     }
 
     interface ViewHistory
     {
-        void View();
+        void View(string User2);
     }
 
     interface EditMessage
