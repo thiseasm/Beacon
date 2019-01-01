@@ -117,7 +117,27 @@ namespace Beacon
 
         public void Create()
         {
-            throw new NotImplementedException();
+            bool NameOriginal = false;
+            string Name = "";
+
+            while (NameOriginal == false)
+            {
+                Console.WriteLine("Please pick a username:");
+                Name = Console.ReadLine();
+
+                NameOriginal = Namecheck(Name);
+
+                if (NameOriginal == false)
+                {
+                    Console.WriteLine("This Username is already taken!");
+                    Console.WriteLine("Please choose something else.");
+                }
+
+            }
+
+            string Pass1 = "0000";            
+
+            Registration(Name, Pass1);
         }
 
         public void Demote(string User2)
@@ -179,7 +199,7 @@ namespace Beacon
                 Rank = dbcon.Query("SELECT Rank FROM Accounts WHERE Username = @name", new { name = User2 }).ToString();
             }
 
-            string NewRank ="";
+            string NewRank = "";
 
             if (Rank == "Guest")
             {
@@ -213,6 +233,52 @@ namespace Beacon
         {
             throw new NotImplementedException();
         }
+
+        static bool Namecheck(string Name)
+        {
+            string connectionString = "Server=THISEAS-PC\\SQLExpress;Database=Beacon;Integrated Security=true;";
+            SqlConnection dbcon = new SqlConnection(connectionString);
+            bool NameOriginal;
+
+            using (dbcon)
+            {
+                dbcon.Open();
+                var UsernameCheck = dbcon.Query("SELECT * FROM Accounts WHERE Username = @Username;", new { Username = Name }).Count();
+
+                if (UsernameCheck == 1)
+                {
+
+                    NameOriginal = false;
+
+                }
+                else
+                {
+                    NameOriginal = true;
+                }
+
+                return NameOriginal;
+            }
+        }
+        static void Registration(string Name, string Pass1)
+        {
+            string connectionString = "Server=THISEAS-PC\\SQLExpress;Database=Beacon;Integrated Security=true;";
+            SqlConnection dbcon = new SqlConnection(connectionString);
+            using (dbcon)
+            {
+                dbcon.Open();
+
+                string RegistrationQuery = "INSERT INTO Accounts (Username,Rank) VALUES (@name, @guest);";
+                var AccountInsertion = dbcon.Query(RegistrationQuery, new { name = Name, guest = "Guest" });
+
+                
+                string PassQuery = "INSERT INTO Credentials (Username,Password) VALUES (@name, @pass);";
+                var PassInsertion = dbcon.Query(PassQuery, new { name = Name, pass = Pass1 });
+            }
+
+            Console.WriteLine($"The user {Name} has been created.");
+            Console.WriteLine($"Please use the password:{Pass1} to login for the first time!");
+            //TODO ADD METHOD TO CHANGE OWN PASSWORD
+        }
     }
 
     internal class Message
@@ -228,4 +294,6 @@ namespace Beacon
         }
 
     }
+
+
 }
