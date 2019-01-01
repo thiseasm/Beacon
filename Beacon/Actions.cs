@@ -6,6 +6,11 @@ using System.Threading.Tasks;
 
 namespace Beacon
 {
+    interface SendMessage
+    {
+        void Send(string Recipient);
+    }
+
     interface ViewHistory
     {
         void View();

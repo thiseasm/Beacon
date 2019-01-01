@@ -8,16 +8,16 @@ using Dapper;
 
 namespace Beacon
 {
-
+    
     
 
     class Program
     {
         //TODO fix classes 
 
+
         static string connectionString = "Server=THISEAS-PC\\SQLExpress;Database=Beacon;Integrated Security=true;";
 
-        
 
 
         static void Main(string[] args)

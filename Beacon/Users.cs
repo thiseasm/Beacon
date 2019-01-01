@@ -1,12 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Dapper;
 
 namespace Beacon
 {
     enum Authorization { Guest, Member, Trusted, Administrator };
+
+    
 
     internal abstract class User
     {
@@ -16,12 +20,30 @@ namespace Beacon
         
     }
 
-    internal class Guest : User, ViewHistory
+    internal class Guest : User, ViewHistory, SendMessage
     {
         public Guest(string Name, Authorization Authority)
         {
             Username = Name;         
             Rank = Authority;
+        }
+
+        public void Send(string Recipient)
+        {
+            string connectionString = "Server=THISEAS-PC\\SQLExpress;Database=Beacon;Integrated Security=true;";
+            SqlConnection dbcon = new SqlConnection(connectionString);
+
+            Console.WriteLine("Please type your message. (Limit = 250 characters)");
+            string textMessage = Console.ReadLine();
+            DateTime dateTime = DateTime.Now;
+            string QueryMessage = "INSERT INTO Messages (Sender, Receiver, Submission, Message) VALUES (@Sender, @Receiver, @Submission, @Message);";
+
+            using (dbcon)
+            {
+                var SendMessage = dbcon.Query(QueryMessage, new { Sender = Username, Receiver = Recipient, Submission = dateTime, Message = textMessage });
+            }
+
+            View();
         }
 
         public void View()
