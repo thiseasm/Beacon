@@ -11,7 +11,7 @@ namespace Beacon
     internal abstract class User
     {
 
-        protected string UserName;
+        internal string Username;
         protected Authorization Rank;
         
     }
@@ -20,7 +20,7 @@ namespace Beacon
     {
         public Guest(string Name, Authorization Authority)
         {
-            UserName = Name;         
+            Username = Name;         
             Rank = Authority;
         }
 

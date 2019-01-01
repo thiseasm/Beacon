@@ -35,6 +35,8 @@ namespace Beacon
 
             string Selection = Console.ReadLine();
 
+            User User1 = null;
+
             switch (Selection)
             {
                 case "X":
@@ -121,46 +123,30 @@ namespace Beacon
 
                         string AuthorityCheck = dbcon.Query("SELECT Rank FROM Accounts WHERE Username = @name;", new { name = Username }).ToString();
 
-                        switch (AuthorityCheck)
+                        if (AuthorityCheck == "Guest")
                         {
-                            case "Guest":
-                                Guest guest = new Guest(Username, Authorization.Guest);
-                                break;
-                            case "Member":
-                                Member member = new Member(Username, Authorization.Member);
-                                break;
-                            case "Trusted":
-                                Trusted trusted = new Trusted(Username, Authorization.Trusted);
-                                break;
-                            case "Administrator":
-                                Admin admin = new Admin(Username, Authorization.Administrator);
-                                break;
+                            User1 = new Guest(Username, Authorization.Guest);
                         }
+                        else if (AuthorityCheck == "Member")
+                        {
+                            User1 = new Member(Username, Authorization.Member);
+                        }
+                        else if (AuthorityCheck == "Trusted")
+                        {
+                            User1 = new Trusted(Username, Authorization.Trusted);
+                        }
+                        else if (AuthorityCheck == "Administrator")
+                        {
+                            User1 = new Admin(Username, Authorization.Administrator);
+                        }
+
+                        
                     }
 
                     Console.WriteLine("Login Successful!");
-                    Console.WriteLine($"Welcome back {Username}");                  
+                    Console.WriteLine($"Welcome back {User1.Username}");                  
                     
                     break;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
             }
             
