@@ -19,7 +19,7 @@ namespace Beacon
         {
 
             LoginMenu NewLogin = new LoginMenu();
-            var User1 = NewLogin.LoginScreen();
+            User User1 = NewLogin.LoginScreen();
             Console.WriteLine("Login Successful!");
             Console.WriteLine($"Welcome back {User1.Username}");
             Console.WriteLine(User1.GetType());

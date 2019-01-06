@@ -102,8 +102,8 @@ namespace Beacon
                     {
                         dbcon.Open();
 
-                        string AuthorityCheck = dbcon.Query("SELECT Rank FROM Accounts WHERE Username = @name;", new { name = Username }).ToString();
-
+                        var AuthorityCheck =dbcon.Query<string>("SELECT Rank FROM Accounts WHERE Username = @name;", new { name = Username }).Single();
+                        
                         if (AuthorityCheck == "Guest")
                         {
                             return new Guest(Username, Authorization.Guest);
