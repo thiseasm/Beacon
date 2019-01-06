@@ -15,17 +15,13 @@ namespace Beacon
     {
         //TODO fix classes 
 
-
-        static string connectionString = "Server=THISEAS-PC\\SQLExpress;Database=Beacon;Integrated Security=true;";
-
-
-
         static void Main(string[] args)
         {
 
             LoginMenu NewLogin = new LoginMenu();
             var User1 = NewLogin.LoginScreen();
-
+            Console.WriteLine("Login Successful!");
+            Console.WriteLine($"Welcome back {User1.Username}");
             Console.WriteLine(User1.GetType());
             Console.ReadLine();
 

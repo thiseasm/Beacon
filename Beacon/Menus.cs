@@ -26,10 +26,7 @@ namespace Beacon
 
             SqlConnection dbcon = new SqlConnection(connectionString);
 
-            string Selection = Console.ReadLine();
-
-            User User1 = null;
-
+            string Selection = Console.ReadLine();       
             switch (Selection.ToLower())
             {
                 case "x":
@@ -109,24 +106,22 @@ namespace Beacon
 
                         if (AuthorityCheck == "Guest")
                         {
-                            User1 = new Guest(Username, Authorization.Guest);
+                            return new Guest(Username, Authorization.Guest);
                         }
                         else if (AuthorityCheck == "Member")
                         {
-                            User1 = new Member(Username, Authorization.Member);
+                            return new Member(Username, Authorization.Member);
                         }
                         else if (AuthorityCheck == "Trusted")
                         {
-                            User1 = new Trusted(Username, Authorization.Trusted);
+                            return new Trusted(Username, Authorization.Trusted);
                         }
                         else if (AuthorityCheck == "Administrator")
                         {
-                            User1 = new Admin(Username, Authorization.Administrator);
+                            return new Admin(Username, Authorization.Administrator);
                         }
-                        Console.WriteLine("Login Successful!");
-                        Console.WriteLine($"Welcome back {User1.Username}");
-                        return User1;
-                    }                                                          
+                    }
+                    break;
             }
             return null;
         }
