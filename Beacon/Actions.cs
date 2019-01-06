@@ -18,12 +18,12 @@ namespace Beacon
 
     interface EditMessage
     {
-        void Edit();
+        void Edit(Message message, string User2);
     }
 
     interface DeleteMessage
     {
-        void Delete();
+        void Delete(Message message, string User2);
     }
 
     interface GiveAuthority
@@ -35,7 +35,8 @@ namespace Beacon
     interface UserManipulation
     {
         void Create();
-        void Destroy();
-        void Update();
+        void Destroy(string User2);
+        void Update(string User2);
+        void ListUsers();
     }
 }

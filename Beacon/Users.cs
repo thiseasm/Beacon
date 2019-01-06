@@ -16,7 +16,7 @@ namespace Beacon
     {
 
         internal string Username;
-        protected Authorization Rank;
+        internal Authorization Rank;
         
     }
 
@@ -85,9 +85,24 @@ namespace Beacon
 
         }
 
-        public void Edit()
+        public void Edit(Message message, string User2)
         {
-            throw new NotImplementedException();
+            string Sender = message.Sender;
+            string Receiver = message.Receiver;
+            DateTime dateTime = message.dateTime;
+            string text = message.Text;
+
+            SqlConnection dbcon = new SqlConnection(connectionString);
+            string Query = "UPDATE Messages SET Message = @Message WHERE (Sender = @sender AND Receiver = @receiver AND Submission = @datetime);";
+            
+            using (dbcon)
+            {
+                dbcon.Open();
+                var AlterMessage = dbcon.Query(Query, new { Message = text, sender = Sender, receiver = Receiver, datetime = dateTime });
+            }
+
+            Console.WriteLine("Message has been altered!");
+            View(User2);
         }
     }
 
@@ -100,9 +115,24 @@ namespace Beacon
 
         }
 
-        public void Delete()
+        public void Delete(Message message, string User2)
         {
-            throw new NotImplementedException();
+            string Sender = message.Sender;
+            string Receiver = message.Receiver;
+            DateTime dateTime = message.dateTime;
+            string text = message.Text;
+
+            SqlConnection dbcon = new SqlConnection(connectionString);
+            string Query = "DELETE FROM Messages WHERE (Sender = @sender AND Receiver = @receiver AND Submission = @datetime);";
+
+            using (dbcon)
+            {
+                dbcon.Open();
+                var DeleteMessage = dbcon.Query(Query, new { sender = Sender, receiver = Receiver, datetime = dateTime });
+            }
+
+            Console.WriteLine("Message has been deleted!");
+            View(User2);
         }
     }
 
@@ -138,6 +168,7 @@ namespace Beacon
             string Pass1 = "0000";            
 
             Registration(Name, Pass1);
+            ListUsers();
         }
 
         public void Demote(string User2)
@@ -180,11 +211,24 @@ namespace Beacon
             }
 
             Console.WriteLine($"{User2} has been demoted to {NewRank}!");
+            ListUsers();
         }
 
-        public void Destroy()
+        public void Destroy(string User2)
         {
-            throw new NotImplementedException();
+            SqlConnection dbcon = new SqlConnection(connectionString);
+            string UsernameQuery = "DELETE FROM Accounts WHERE Username = @user;";
+            string CredentialsQuery = "DELETE FROM Credentials WHERE Username = @user;";
+
+            using (dbcon)
+            {
+                dbcon.Open();
+                var DeleteUser = dbcon.Query(UsernameQuery, new { user = User2 });
+                var DeletePass = dbcon.Query(CredentialsQuery, new { user = User2 });
+            }
+
+            Console.WriteLine($"{User2} has been deleted!");
+            ListUsers();
         }
 
         public void Promote(string User2)
@@ -227,11 +271,42 @@ namespace Beacon
             }
 
             Console.WriteLine($"{User2} has been promoted to {NewRank}!");
+            ListUsers();
         }
 
-        public void Update()
+        public void Update(string User2)
         {
-            throw new NotImplementedException();
+            SqlConnection dbcon = new SqlConnection(connectionString);
+            string AccountQuery = "UPDATE Accounts,Credentials SET Username = @user WHERE Username = @user2;";
+
+            Console.WriteLine($"Pick a new username for {User2}:");
+            string usernameNEW = Console.ReadLine();
+            using (dbcon)
+            {
+                dbcon.Open();
+                var UpdateUser = dbcon.Query(AccountQuery, new { user=usernameNEW, user2 = User2 });
+            }
+
+            Console.WriteLine($"{User2} has been changed to {usernameNEW}");
+            ListUsers();
+        }
+
+        public void ListUsers()
+        {
+            SqlConnection dbcon = new SqlConnection(connectionString);
+            string List = "SELECT * FROM Accounts;";
+            var Users = new List<User>();
+
+            using (dbcon)
+            {
+                dbcon.Open();
+                Users.AddRange(dbcon.Query<User>(List));
+            }
+
+            foreach (var user in Users)
+            {
+                Console.WriteLine(user.Username + " - " + user.Rank);
+            }
         }
 
         static bool Namecheck(string Name)
@@ -259,6 +334,7 @@ namespace Beacon
                 return NameOriginal;
             }
         }
+
         static void Registration(string Name, string Pass1)
         {
             string connectionString = "Server=THISEAS-PC\\SQLExpress;Database=Beacon;Integrated Security=true;";
@@ -279,6 +355,8 @@ namespace Beacon
             Console.WriteLine($"Please use the password:{Pass1} to login for the first time!");
             //TODO ADD METHOD TO CHANGE OWN PASSWORD
         }
+
+        
     }
 
     internal class Message
