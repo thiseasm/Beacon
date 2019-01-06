@@ -22,7 +22,6 @@ namespace Beacon
             User User1 = NewLogin.LoginScreen();
             Console.WriteLine("Login Successful!");
             Console.WriteLine($"Welcome back {User1.Username}");
-            Console.WriteLine(User1.GetType());
             Console.ReadLine();
 
             //TODO ADD MENU AFTER LOGIN

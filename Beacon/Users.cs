@@ -31,6 +31,36 @@ namespace Beacon
             Rank = Authority;
         }
 
+        public void ChangePassword()
+        {
+            string Pass1;
+            string Pass2;
+
+            do
+            {
+
+                //TODO ADD PASSWORD MASKING
+                Console.WriteLine("Please pick a password:");
+                Pass1 = Console.ReadLine();
+
+                Console.WriteLine("Please enter your password a second time:");
+                Pass2 = Console.ReadLine();
+
+                if (Pass1 != Pass2)
+                {
+                    Console.WriteLine("The passwords do not match!");
+                }
+
+            } while (Pass1 != Pass2);
+
+            using (SqlConnection dbcon = new SqlConnection(connectionString))
+            {
+                dbcon.Open();
+                var PassUpdate = dbcon.Query("UPDATE TABLE Credentials SET Password = @pass WHERE Username = @name;", new { pass = Pass1, name = Username });
+            }
+            Console.WriteLine("Your password has been successfully changed!");
+        }
+
         public void Send(string User2)
         {
             SqlConnection dbcon = new SqlConnection(connectionString);
@@ -84,6 +114,7 @@ namespace Beacon
         {
 
         }
+
 
         public void Edit(Message message, string User2)
         {
@@ -180,7 +211,7 @@ namespace Beacon
             {
                 dbcon.Open();
 
-                Rank = dbcon.Query("SELECT Rank FROM Accounts WHERE Username = @name", new { name = User2 }).ToString();
+                Rank = dbcon.Query<string>("SELECT Rank FROM Accounts WHERE Username = @name", new { name = User2 }).Single();
             }
 
             string NewRank = "";
@@ -240,7 +271,7 @@ namespace Beacon
             {
                 dbcon.Open();
 
-                Rank = dbcon.Query("SELECT Rank FROM Accounts WHERE Username = @name", new { name = User2 }).ToString();
+                Rank = dbcon.Query<string>("SELECT Rank FROM Accounts WHERE Username = @name", new { name = User2 }).Single();
             }
 
             string NewRank = "";
