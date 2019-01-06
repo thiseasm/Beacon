@@ -104,7 +104,7 @@ namespace Beacon
 
         }
     }
-    //TODO add Interfaces
+
     internal class Member : Guest, EditMessage
     {
 
@@ -250,12 +250,14 @@ namespace Beacon
             SqlConnection dbcon = new SqlConnection(connectionString);
             string UsernameQuery = "DELETE FROM Accounts WHERE Username = @user;";
             string CredentialsQuery = "DELETE FROM Credentials WHERE Username = @user;";
+            string MessageQuery = "DELETE FROM Messages WHERE (Sender = @user OR Receiver = @user);";
 
             using (dbcon)
             {
                 dbcon.Open();
                 var DeleteUser = dbcon.Query(UsernameQuery, new { user = User2 });
                 var DeletePass = dbcon.Query(CredentialsQuery, new { user = User2 });
+                var DeleteHistory = dbcon.Query(MessageQuery, new { user = User2 });
             }
 
             Console.WriteLine($"{User2} has been deleted!");

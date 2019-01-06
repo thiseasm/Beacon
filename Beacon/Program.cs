@@ -18,10 +18,10 @@ namespace Beacon
         static void Main(string[] args)
         {
 
-            LoginMenu NewLogin = new LoginMenu();
-            User User1 = NewLogin.LoginScreen();
+            Menu NewMenu = new Menu();
+            User User1 = NewMenu.LoginScreen();
             Console.WriteLine("Login Successful!");
-            Console.WriteLine($"Welcome back {User1.Username}");
+            NewMenu.MenuScreen(User1);
             Console.ReadLine();
 
             //TODO ADD MENU AFTER LOGIN

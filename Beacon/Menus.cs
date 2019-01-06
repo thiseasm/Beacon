@@ -9,7 +9,7 @@ using Dapper;
 
 namespace Beacon
 {
-    internal class LoginMenu
+    internal class Menu
     {
         static string connectionString = "Server=THISEAS-PC\\SQLExpress;Database=Beacon;Integrated Security=true;";
         internal User LoginScreen()
@@ -126,6 +126,54 @@ namespace Beacon
             return null;
         }
 
+        internal void MenuScreen(User User1)
+        {
+            while (true)
+            {
+                Console.WriteLine("*Beacon Messenger System* est.2018!");
+                Console.WriteLine($"Welcome back {User1.Username}");
+                Console.WriteLine("Please follow the instructions provided below.");
+                Console.WriteLine("==============");
+                Console.WriteLine("Choose action:");
+                Console.WriteLine("view - View messages");
+
+                if (User1.Rank == Authorization.Administrator)
+                {
+                    Console.WriteLine("=======================");
+                    Console.WriteLine("Admin Action available:");
+                    Console.WriteLine("list - List registered users");
+                }
+                Console.WriteLine("logout - Logout");
+                Console.WriteLine("==============");
+                string Selection = Console.ReadLine();
+
+                switch (Selection.ToLower())
+                {
+                    case "view":
+                        Console.WriteLine("Please enter a valid username:");
+                        string User2 = Console.ReadLine();
+                        bool UserInSystem = true;
+
+                        while (UserInSystem == true)
+                        {
+                            UserInSystem = Namecheck(User2);
+                            if (UserInSystem == true)
+                            {
+                                Console.WriteLine($"The user {User2} cannot be found!");
+                            }
+                        }
+                        
+
+                }
+
+
+
+            }
+
+
+
+        }
+
         static bool Namecheck(string Name)
         {
             SqlConnection dbcon = new SqlConnection(connectionString);
@@ -199,4 +247,5 @@ namespace Beacon
         }
         
     }
+
 }
