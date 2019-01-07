@@ -30,15 +30,16 @@ namespace Beacon
             switch (Selection.ToLower())
             {
                 case "x":
+                    Console.Clear();
                     Console.WriteLine("Thank you for choosing us for your communication needs.");
                     Console.WriteLine("The program will now terminate.");
                     Environment.Exit(0);
                     break;
                 case "r":
-
+                    Console.Clear();
                     bool NameOriginal = false;
                     string Name = "";
-
+                    
                     while (NameOriginal == false)
                     {
                         Console.WriteLine("Please pick a username:");
@@ -57,7 +58,7 @@ namespace Beacon
 
                     string Pass1;
                     string Pass2;
-
+                    
                     do
                     {
 
@@ -67,7 +68,7 @@ namespace Beacon
 
                         Console.WriteLine("Please enter your password a second time:");
                         Pass2 = Console.ReadLine();
-
+                        Console.Clear();
                         if (Pass1 != Pass2)
                         {
                             Console.WriteLine("The passwords do not match!");
@@ -79,7 +80,7 @@ namespace Beacon
                     break;
                
                 case "l":
-
+                    Console.Clear();
                     bool UserInBase = true;
                     string Username = "";
 
@@ -126,23 +127,19 @@ namespace Beacon
             return null;
         }
 
-        internal void MenuScreen(User User1)
+        internal void MenuScreen(Trusted User)
         {
             while (true)
             {
+                
+
+                Console.Clear();
                 Console.WriteLine("*Beacon Messenger System* est.2018!");
-                Console.WriteLine($"Welcome back {User1.Username}");
+                Console.WriteLine($"Welcome back {User.Username}");
                 Console.WriteLine("Please follow the instructions provided below.");
                 Console.WriteLine("==============");
                 Console.WriteLine("Choose action:");
-                Console.WriteLine("view - View messages");
-
-                if (User1.Rank == Authorization.Administrator)
-                {
-                    Console.WriteLine("=======================");
-                    Console.WriteLine("Admin Action available:");
-                    Console.WriteLine("list - List registered users");
-                }
+                Console.WriteLine("view - View messages");                
                 Console.WriteLine("logout - Logout");
                 Console.WriteLine("==============");
                 string Selection = Console.ReadLine();
@@ -150,8 +147,16 @@ namespace Beacon
                 switch (Selection.ToLower())
                 {
                     case "view":
+                        Console.Clear();
                         Console.WriteLine("Please enter a valid username:");
+                        Console.WriteLine("==============OR==============");
+                        Console.WriteLine("return - Return to Main Menu");
                         string User2 = Console.ReadLine();
+
+                        if (User2.ToLower() == "return")
+                        {
+                            break;
+                        }
                         bool UserInSystem = true;
 
                         while (UserInSystem == true)
@@ -159,10 +164,58 @@ namespace Beacon
                             UserInSystem = Namecheck(User2);
                             if (UserInSystem == true)
                             {
+                                Console.Clear();
                                 Console.WriteLine($"The user {User2} cannot be found!");
+                                Console.WriteLine("Please enter a valid username:");
+                                User2 = Console.ReadLine();
                             }
                         }
-                        
+                        User.View(User2);
+                        Console.WriteLine("Choose action:");
+                        Console.WriteLine("send - Send message");
+                        if (User.Rank == Authorization.Member)
+                        {
+                            Console.WriteLine("edit - Edit message");
+                        }
+                        else if (User.Rank == Authorization.Trusted)
+                        {
+                            Console.WriteLine("edit - Edit message");
+                            Console.WriteLine("delete - Delete message");
+                        }
+                        Console.WriteLine("==============OR==============");
+                        Console.WriteLine("return - Return to Previous Screen");
+                        string ActionSelection = Console.ReadLine();
+
+                        switch (ActionSelection.ToLower())
+                        {
+                            case "return":
+                                Console.Clear();
+                                break;
+                            case "send":
+                                User.Send(User2);
+                                break;
+                            case "edit":
+                                if (User.Rank == Authorization.Guest)
+                                {
+                                    Console.WriteLine("Action Restricted!");
+                                    break;
+                                }
+                                Console.WriteLine("Copy and Paste the date/time of the message you want to alter:");
+                                DateTime dateTime = DateTime.Parse(Console.ReadLine());
+
+                                Console.WriteLine("Please type your message. (Limit = 250 characters)");
+                                string textMessage = Console.ReadLine();
+                                User.Edit(dateTime, textMessage, User2);
+                                break;
+                            case "delete":
+                                Console.WriteLine("Copy and Paste the date/time of the message you want to delete:");
+                                DateTime dateTime2 = DateTime.Parse(Console.ReadLine());                                
+                                User.Delete(dateTime2, User2);
+                                break;
+                        }
+
+
+
 
                 }
 
@@ -172,6 +225,11 @@ namespace Beacon
 
 
 
+        }
+
+        internal void AdminMenu(Admin User1)
+        {
+            //TODO Implement Menu admin
         }
 
         static bool Namecheck(string Name)

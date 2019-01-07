@@ -16,8 +16,7 @@ namespace Beacon
     {
 
         internal string Username;
-        internal Authorization Rank;
-        
+        internal Authorization Rank;        
     }
 
     internal class Guest : User, ViewHistory, SendMessage
@@ -75,7 +74,7 @@ namespace Beacon
             {
                 var SendMessage = dbcon.Query(QueryMessage, new { Sender = Username, Receiver = User2, Submission = dateTime, Message = textMessage });
             }
-
+            Console.Clear();
             View(User2);
         }
 
@@ -116,12 +115,12 @@ namespace Beacon
         }
 
 
-        public void Edit(Message message, string User2)
+        public void Edit(DateTime DateTime, string Text, string User2)
         {
-            string Sender = message.Sender;
-            string Receiver = message.Receiver;
-            DateTime dateTime = message.dateTime;
-            string text = message.Text;
+            string Sender = Username;
+            string Receiver = User2;
+            DateTime dateTime = DateTime;
+            string text = Text;
 
             SqlConnection dbcon = new SqlConnection(connectionString);
             string Query = "UPDATE Messages SET Message = @Message WHERE (Sender = @sender AND Receiver = @receiver AND Submission = @datetime);";
@@ -131,7 +130,7 @@ namespace Beacon
                 dbcon.Open();
                 var AlterMessage = dbcon.Query(Query, new { Message = text, sender = Sender, receiver = Receiver, datetime = dateTime });
             }
-
+            Console.Clear();
             Console.WriteLine("Message has been altered!");
             View(User2);
         }
@@ -146,12 +145,11 @@ namespace Beacon
 
         }
 
-        public void Delete(Message message, string User2)
+        public void Delete(DateTime DateTime, string User2)
         {
-            string Sender = message.Sender;
-            string Receiver = message.Receiver;
-            DateTime dateTime = message.dateTime;
-            string text = message.Text;
+            string Sender = Username;
+            string Receiver = User2;
+            DateTime dateTime = DateTime;
 
             SqlConnection dbcon = new SqlConnection(connectionString);
             string Query = "DELETE FROM Messages WHERE (Sender = @sender AND Receiver = @receiver AND Submission = @datetime);";
