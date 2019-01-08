@@ -139,6 +139,7 @@ namespace Beacon
                 Console.WriteLine("====================");
                 Console.WriteLine("Choose action:");
                 Console.WriteLine("view - View messages");
+                Console.WriteLine("change - Change password");
                 Console.WriteLine("logout - Logout");
                 Console.WriteLine("====================");
                 string Selection = Console.ReadLine();
@@ -189,6 +190,10 @@ namespace Beacon
                                 break;
                         }
                         break;
+                    case "change":
+                        Console.Clear();
+                        User.ChangePassword();
+                        break;
                     case "logout":
                         Console.Clear();
                         InUse = false;
@@ -213,6 +218,7 @@ namespace Beacon
                 Console.WriteLine("====================");
                 Console.WriteLine("Choose action:");
                 Console.WriteLine("view - View messages");
+                Console.WriteLine("change - Change password");
                 Console.WriteLine("logout - Logout");
                 Console.WriteLine("====================");
                 string Selection = Console.ReadLine();
@@ -271,6 +277,10 @@ namespace Beacon
                                 break;
                         }
                         break;
+                    case "change":
+                        Console.Clear();
+                        User.ChangePassword();
+                        break;
                     case "logout":
                         Console.Clear();
                         InUse = false;
@@ -293,7 +303,8 @@ namespace Beacon
                 Console.WriteLine("Please follow the instructions provided below.");
                 Console.WriteLine("====================");
                 Console.WriteLine("Choose action:");
-                Console.WriteLine("view - View messages");                
+                Console.WriteLine("view - View messages");
+                Console.WriteLine("change - Change password");
                 Console.WriteLine("logout - Logout");
                 Console.WriteLine("====================");
                 string Selection = Console.ReadLine();
@@ -358,6 +369,10 @@ namespace Beacon
                                 break;
                         }
                         break;
+                    case "change":
+                        Console.Clear();
+                        User.ChangePassword();
+                        break;
                     case "logout":
                         Console.Clear();
                         InUse = false;
@@ -383,6 +398,7 @@ namespace Beacon
                 Console.WriteLine("Choose action:");
                 Console.WriteLine("view - View messages");
                 Console.WriteLine("admin - Admin actions");
+                Console.WriteLine("change - Change password");
                 Console.WriteLine("logout - Logout");
                 Console.WriteLine("====================");
                 string Selection = Console.ReadLine();
@@ -571,6 +587,10 @@ namespace Beacon
                                 Console.WriteLine("Please use one of the available actions.");
                                 break;
                         }
+                        break;
+                    case "change":
+                        Console.Clear();
+                        User.ChangePassword();
                         break;
                     case "logout":
                         Console.Clear();
