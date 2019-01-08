@@ -197,6 +197,7 @@ namespace Beacon
             string Pass1 = "0000";            
 
             Registration(Name, Pass1);
+            Console.Clear();
             ListUsers();
         }
 
@@ -240,6 +241,7 @@ namespace Beacon
             }
 
             Console.WriteLine($"{User2} has been demoted to {NewRank}!");
+            Console.Clear();
             ListUsers();
         }
 
@@ -300,7 +302,7 @@ namespace Beacon
 
                 var Promotion = dbcon.Query("UPDATE TABLE Accounts SET Rank = @newrank WHERE Username = @name", new { newrank = NewRank, name = User2 });
             }
-
+            Console.Clear();
             Console.WriteLine($"{User2} has been promoted to {NewRank}!");
             ListUsers();
         }
@@ -308,7 +310,7 @@ namespace Beacon
         public void Update(string User2)
         {
             SqlConnection dbcon = new SqlConnection(connectionString);
-            string AccountQuery = "UPDATE Accounts,Credentials SET Username = @user WHERE Username = @user2;";
+            string AccountQuery = "UPDATE Accounts SET Username = @user WHERE Username = @user2;";
 
             Console.WriteLine($"Pick a new username for {User2}:");
             string usernameNEW = Console.ReadLine();
@@ -317,7 +319,7 @@ namespace Beacon
                 dbcon.Open();
                 var UpdateUser = dbcon.Query(AccountQuery, new { user=usernameNEW, user2 = User2 });
             }
-
+            Console.Clear();
             Console.WriteLine($"{User2} has been changed to {usernameNEW}");
             ListUsers();
         }

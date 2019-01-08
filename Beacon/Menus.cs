@@ -194,6 +194,9 @@ namespace Beacon
                         InUse = false;
                         Console.WriteLine($"Thank you {User.Username} for using *Beacon*!");
                         break;
+                    default:
+                        Console.WriteLine("Please use one of the available actions.");
+                        break;
                 }
             }
         }
@@ -272,6 +275,9 @@ namespace Beacon
                         Console.Clear();
                         InUse = false;
                         Console.WriteLine($"Thank you {User.Username} for using *Beacon*!");
+                        break;
+                    default:
+                        Console.WriteLine("Please use one of the available actions.");
                         break;
                 }
             }
@@ -357,13 +363,225 @@ namespace Beacon
                         InUse = false;
                         Console.WriteLine($"Thank you {User.Username} for using *Beacon*!");
                         break;
+                    default:
+                        Console.WriteLine("Please use one of the available actions.");
+                        break;
                 }
             }
         }
 
-        internal void AdminMenu(Admin User1)
+        internal void AdminMenu(Admin User)
         {
-            //TODO Implement Menu admin
+            bool InUse = true;
+            Console.Clear();
+            Console.WriteLine("*Beacon Messenger System* est.2018!");
+            Console.WriteLine($"Welcome back {User.Username}");
+            while (InUse == true)
+            {
+                Console.WriteLine("Please follow the instructions provided below.");
+                Console.WriteLine("====================");
+                Console.WriteLine("Choose action:");
+                Console.WriteLine("view - View messages");
+                Console.WriteLine("admin - Admin actions");
+                Console.WriteLine("logout - Logout");
+                Console.WriteLine("====================");
+                string Selection = Console.ReadLine();
+
+                switch (Selection.ToLower())
+                {
+                    case "view":
+                        Console.Clear();
+                        Console.WriteLine("Please enter a valid username:");
+                        Console.WriteLine("==============OR==============");
+                        Console.WriteLine("return - Return to Main Menu");
+                        string User2 = Console.ReadLine();
+
+                        if (User2.ToLower() == "return")
+                        {
+                            break;
+                        }
+                        bool UserOtherInSystem = true;
+
+                        while (UserOtherInSystem == true)
+                        {
+                            UserOtherInSystem = Namecheck(User2);
+                            if (UserOtherInSystem == true)
+                            {
+                                Console.Clear();
+                                Console.WriteLine($"The user {User2} cannot be found!");
+                                Console.WriteLine("Please enter a valid username:");
+                                User2 = Console.ReadLine();
+                            }
+                        }
+                        User.View(User2);
+                        Console.WriteLine("Choose action:");
+                        Console.WriteLine("send - Send message");
+                        Console.WriteLine("edit - Edit message");
+                        Console.WriteLine("delete - Delete message");
+                        Console.WriteLine("==============OR==============");
+                        Console.WriteLine("return - Return to Previous Screen");
+                        string ActionSelection = Console.ReadLine();
+
+                        switch (ActionSelection.ToLower())
+                        {
+                            case "return":
+                                Console.Clear();
+                                break;
+                            case "send":
+                                User.Send(User2);
+                                break;
+                            case "edit":
+                                Console.WriteLine("Copy and Paste the date/time of the message you want to alter:");
+                                DateTime dateTime = DateTime.Parse(Console.ReadLine());
+                                Console.WriteLine("Please type your message. (Limit = 250 characters)");
+                                string textMessage = Console.ReadLine();
+                                User.Edit(dateTime, textMessage, User2);
+                                break;
+                            case "delete":
+                                Console.WriteLine("Copy and Paste the date/time of the message you want to delete:");
+                                DateTime dateTime2 = DateTime.Parse(Console.ReadLine());
+                                User.Delete(dateTime2, User2);
+                                break;
+                            default:
+                                Console.WriteLine("Please use one of the available actions.");
+                                break;
+                        }
+                        break;
+                    case "admin":
+                        Console.Clear();
+                        Console.WriteLine("list - List registered users");
+                        Console.WriteLine("==============OR==============");
+                        Console.WriteLine("return - Return to Main Menu");
+                        string AdminSelection = Console.ReadLine();
+
+                        switch (AdminSelection.ToLower())
+                        {
+                            case "return":
+                                break;
+                            case "list":
+                                Console.Clear();
+                                User.ListUsers();
+                                Console.WriteLine("Choose action:");
+                                Console.WriteLine("create - Create a new account");
+                                Console.WriteLine("update - Change a user's username");
+                                Console.WriteLine("promote - Promote an existing user");
+                                Console.WriteLine("demote - Demote an existing user");
+                                Console.WriteLine("delete - Delete an existing user");
+                                Console.WriteLine("==============OR==============");
+                                Console.WriteLine("return - Return to Previous Screen");
+                                string SuperUserSelection = Console.ReadLine();
+                                string UserOther = "";
+                                bool UserInList = true;
+                                switch (SuperUserSelection.ToLower())
+                                {
+                                    case "return":
+                                        Console.Clear();
+                                        break;
+                                    case "create":
+                                        User.Create();
+                                        break;
+                                    case "update":
+                                        Console.WriteLine("Please pick a user from the list:");
+                                        UserOther = Console.ReadLine();
+                                        
+                                        while (UserInList == true)
+                                        {
+                                            UserInList = Namecheck(UserOther);
+                                            if (UserInList == true)
+                                            {
+                                                Console.Clear();
+                                                Console.WriteLine($"The user {UserOther} cannot be found!");
+                                                Console.WriteLine("Please enter a valid username:");
+                                                User2 = Console.ReadLine();
+                                            }
+                                        }
+                                        User.Update(UserOther);
+                                        break;
+                                    case "promote":
+                                        Console.WriteLine("Please pick a user from the list:");
+                                        UserOther = Console.ReadLine();
+                                        while (UserInList == true)
+                                        {
+                                            UserInList = Namecheck(UserOther);
+                                            if (UserInList == true)
+                                            {
+                                                Console.Clear();
+                                                Console.WriteLine($"The user {UserOther} cannot be found!");
+                                                Console.WriteLine("Please enter a valid username:");
+                                                User2 = Console.ReadLine();
+                                            }
+                                        }
+                                        User.Promote(UserOther);
+                                        break;
+                                    case "demote":
+                                        Console.WriteLine("Please pick a user from the list:");
+                                        UserOther = Console.ReadLine();
+                                        while (UserInList == true)
+                                        {
+                                            UserInList = Namecheck(UserOther);
+                                            if (UserInList == true)
+                                            {
+                                                Console.Clear();
+                                                Console.WriteLine($"The user {UserOther} cannot be found!");
+                                                Console.WriteLine("Please enter a valid username:");
+                                                User2 = Console.ReadLine();
+                                            }
+                                        }
+                                        User.Demote(UserOther);
+                                        break;
+                                    case "delete":
+                                        Console.WriteLine("Please pick a user from the list:");
+                                        UserOther = Console.ReadLine();
+                                        while (UserInList == true)
+                                        {
+                                            UserInList = Namecheck(UserOther);
+                                            if (UserInList == true)
+                                            {
+                                                Console.Clear();
+                                                Console.WriteLine($"The user {UserOther} cannot be found!");
+                                                Console.WriteLine("Please enter a valid username:");
+                                                User2 = Console.ReadLine();
+                                            }
+                                        }
+                                        Console.Clear();
+                                        string SecurityCheck = "";
+                                        while (SecurityCheck.ToLower() != "y" && SecurityCheck.ToLower() != "n")
+                                        {
+                                            Console.WriteLine($"The user {UserOther} will be PERMANENTLY DELETED");
+                                            Console.WriteLine("as will all the conversations he/she has participated!");
+                                            Console.WriteLine("ARE YOU SURE?");
+                                            Console.WriteLine("[ Y / N]");
+                                            SecurityCheck = Console.ReadLine();
+                                        }
+                                        if (SecurityCheck.ToLower() != "y")
+                                        {
+                                            User.Destroy(UserOther);
+                                        }
+                                        else
+                                        {
+                                            break;
+                                        }                                        
+                                        break;
+                                    default:
+                                        Console.WriteLine("Please use one of the available actions.");
+                                        break;
+                                }
+                                break;
+                            default:
+                                Console.WriteLine("Please use one of the available actions.");
+                                break;
+                        }
+                        break;
+                    case "logout":
+                        Console.Clear();
+                        InUse = false;
+                        Console.WriteLine($"Please {User.Username},you are our only hope!");
+                        break;
+                    default:
+                        Console.WriteLine("Please use one of the available actions.");
+                        break;
+                }
+            }
         }
 
         static bool Namecheck(string Name)
