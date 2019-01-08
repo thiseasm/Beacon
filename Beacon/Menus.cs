@@ -127,21 +127,20 @@ namespace Beacon
             return null;
         }
 
-        internal void MenuScreen(Trusted User)
+        internal void GuestScreen(Guest User)
         {
-            while (true)
+            bool InUse = true;
+            Console.Clear();
+            Console.WriteLine("*Beacon Messenger System* est.2018!");
+            Console.WriteLine($"Welcome back {User.Username}");
+            while (InUse == true)
             {
-                
-
-                Console.Clear();
-                Console.WriteLine("*Beacon Messenger System* est.2018!");
-                Console.WriteLine($"Welcome back {User.Username}");
                 Console.WriteLine("Please follow the instructions provided below.");
-                Console.WriteLine("==============");
+                Console.WriteLine("====================");
                 Console.WriteLine("Choose action:");
-                Console.WriteLine("view - View messages");                
+                Console.WriteLine("view - View messages");
                 Console.WriteLine("logout - Logout");
-                Console.WriteLine("==============");
+                Console.WriteLine("====================");
                 string Selection = Console.ReadLine();
 
                 switch (Selection.ToLower())
@@ -173,15 +172,78 @@ namespace Beacon
                         User.View(User2);
                         Console.WriteLine("Choose action:");
                         Console.WriteLine("send - Send message");
-                        if (User.Rank == Authorization.Member)
+                        Console.WriteLine("==============OR==============");
+                        Console.WriteLine("return - Return to Previous Screen");
+                        string ActionSelection = Console.ReadLine();
+
+                        switch (ActionSelection.ToLower())
                         {
-                            Console.WriteLine("edit - Edit message");
+                            case "return":
+                                Console.Clear();
+                                break;
+                            case "send":
+                                User.Send(User2);
+                                break;
+                            default:
+                                Console.WriteLine("Please use one of the available actions.");
+                                break;
                         }
-                        else if (User.Rank == Authorization.Trusted)
+                        break;
+                    case "logout":
+                        Console.Clear();
+                        InUse = false;
+                        Console.WriteLine($"Thank you {User.Username} for using *Beacon*!");
+                        break;
+                }
+            }
+        }
+
+        internal void MemberScreen(Member User)
+        {
+            bool InUse = true;
+            Console.Clear();
+            Console.WriteLine("*Beacon Messenger System* est.2018!");
+            Console.WriteLine($"Welcome back {User.Username}");
+            while (InUse == true)
+            {
+                Console.WriteLine("Please follow the instructions provided below.");
+                Console.WriteLine("====================");
+                Console.WriteLine("Choose action:");
+                Console.WriteLine("view - View messages");
+                Console.WriteLine("logout - Logout");
+                Console.WriteLine("====================");
+                string Selection = Console.ReadLine();
+
+                switch (Selection.ToLower())
+                {
+                    case "view":
+                        Console.Clear();
+                        Console.WriteLine("Please enter a valid username:");
+                        Console.WriteLine("==============OR==============");
+                        Console.WriteLine("return - Return to Main Menu");
+                        string User2 = Console.ReadLine();
+
+                        if (User2.ToLower() == "return")
                         {
-                            Console.WriteLine("edit - Edit message");
-                            Console.WriteLine("delete - Delete message");
+                            break;
                         }
+                        bool UserInSystem = true;
+
+                        while (UserInSystem == true)
+                        {
+                            UserInSystem = Namecheck(User2);
+                            if (UserInSystem == true)
+                            {
+                                Console.Clear();
+                                Console.WriteLine($"The user {User2} cannot be found!");
+                                Console.WriteLine("Please enter a valid username:");
+                                User2 = Console.ReadLine();
+                            }
+                        }
+                        User.View(User2);
+                        Console.WriteLine("Choose action:");
+                        Console.WriteLine("send - Send message");
+                        Console.WriteLine("edit - Edit message");
                         Console.WriteLine("==============OR==============");
                         Console.WriteLine("return - Return to Previous Screen");
                         string ActionSelection = Console.ReadLine();
@@ -195,14 +257,87 @@ namespace Beacon
                                 User.Send(User2);
                                 break;
                             case "edit":
-                                if (User.Rank == Authorization.Guest)
-                                {
-                                    Console.WriteLine("Action Restricted!");
-                                    break;
-                                }
                                 Console.WriteLine("Copy and Paste the date/time of the message you want to alter:");
                                 DateTime dateTime = DateTime.Parse(Console.ReadLine());
+                                Console.WriteLine("Please type your message. (Limit = 250 characters)");
+                                string textMessage = Console.ReadLine();
+                                User.Edit(dateTime, textMessage, User2);
+                                break;
+                            default:
+                                Console.WriteLine("Please use one of the available actions.");
+                                break;
+                        }
+                        break;
+                    case "logout":
+                        Console.Clear();
+                        InUse = false;
+                        Console.WriteLine($"Thank you {User.Username} for using *Beacon*!");
+                        break;
+                }
+            }
+        }
+        internal void TrustedScreen(Trusted User)
+        {
+            bool InUse = true;
+            Console.Clear();
+            Console.WriteLine("*Beacon Messenger System* est.2018!");
+            Console.WriteLine($"Welcome back {User.Username}");
+            while (InUse == true)
+            {                               
+                Console.WriteLine("Please follow the instructions provided below.");
+                Console.WriteLine("====================");
+                Console.WriteLine("Choose action:");
+                Console.WriteLine("view - View messages");                
+                Console.WriteLine("logout - Logout");
+                Console.WriteLine("====================");
+                string Selection = Console.ReadLine();
 
+                switch (Selection.ToLower())
+                {
+                    case "view":
+                        Console.Clear();
+                        Console.WriteLine("Please enter a valid username:");
+                        Console.WriteLine("==============OR==============");
+                        Console.WriteLine("return - Return to Main Menu");
+                        string User2 = Console.ReadLine();
+
+                        if (User2.ToLower() == "return")
+                        {
+                            break;
+                        }
+                        bool UserInSystem = true;
+
+                        while (UserInSystem == true)
+                        {
+                            UserInSystem = Namecheck(User2);
+                            if (UserInSystem == true)
+                            {
+                                Console.Clear();
+                                Console.WriteLine($"The user {User2} cannot be found!");
+                                Console.WriteLine("Please enter a valid username:");
+                                User2 = Console.ReadLine();
+                            }
+                        }
+                        User.View(User2);
+                        Console.WriteLine("Choose action:");
+                        Console.WriteLine("send - Send message");                       
+                        Console.WriteLine("edit - Edit message");                       
+                        Console.WriteLine("delete - Delete message");                        
+                        Console.WriteLine("==============OR==============");
+                        Console.WriteLine("return - Return to Previous Screen");
+                        string ActionSelection = Console.ReadLine();
+
+                        switch (ActionSelection.ToLower())
+                        {
+                            case "return":
+                                Console.Clear();
+                                break;
+                            case "send":
+                                User.Send(User2);
+                                break;
+                            case "edit":                                
+                                Console.WriteLine("Copy and Paste the date/time of the message you want to alter:");
+                                DateTime dateTime = DateTime.Parse(Console.ReadLine());
                                 Console.WriteLine("Please type your message. (Limit = 250 characters)");
                                 string textMessage = Console.ReadLine();
                                 User.Edit(dateTime, textMessage, User2);
@@ -212,19 +347,18 @@ namespace Beacon
                                 DateTime dateTime2 = DateTime.Parse(Console.ReadLine());                                
                                 User.Delete(dateTime2, User2);
                                 break;
+                            default:
+                                Console.WriteLine("Please use one of the available actions.");
+                                break;
                         }
-
-
-
-
+                        break;
+                    case "logout":
+                        Console.Clear();
+                        InUse = false;
+                        Console.WriteLine($"Thank you {User.Username} for using *Beacon*!");
+                        break;
                 }
-
-
-
             }
-
-
-
         }
 
         internal void AdminMenu(Admin User1)
