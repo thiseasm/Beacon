@@ -267,10 +267,10 @@ namespace Beacon
                                 break;
                             case "edit":
                                 Console.WriteLine("Copy and Paste the date/time of the message you want to alter:");
-                                DateTime dateTime = DateTime.Parse(Console.ReadLine());
+                                int Stamp = int.Parse(Console.ReadLine());
                                 Console.WriteLine("Please type your message. (Limit = 250 characters)");
                                 string textMessage = Console.ReadLine();
-                                User.Edit(dateTime, textMessage, User2);
+                                User.Edit(Stamp, textMessage, User2);
                                 break;
                             default:
                                 Console.WriteLine("Please use one of the available actions.");
@@ -354,15 +354,15 @@ namespace Beacon
                                 break;
                             case "edit":                                
                                 Console.WriteLine("Copy and Paste the date/time of the message you want to alter:");
-                                DateTime dateTime = DateTime.Parse(Console.ReadLine());
+                                int Stamp =int.Parse(Console.ReadLine());
                                 Console.WriteLine("Please type your message. (Limit = 250 characters)");
                                 string textMessage = Console.ReadLine();
-                                User.Edit(dateTime, textMessage, User2);
+                                User.Edit(Stamp, textMessage, User2);
                                 break;
                             case "delete":
                                 Console.WriteLine("Copy and Paste the date/time of the message you want to delete:");
-                                DateTime dateTime2 = DateTime.Parse(Console.ReadLine());                                
-                                User.Delete(dateTime2, User2);
+                                int Stamp1 = int.Parse(Console.ReadLine());                                
+                                User.Delete(Stamp1, User2);
                                 break;
                             default:
                                 Console.WriteLine("Please use one of the available actions.");
@@ -448,15 +448,15 @@ namespace Beacon
                                 break;
                             case "edit":
                                 Console.WriteLine("Copy and Paste the date/time of the message you want to alter:");
-                                DateTime dateTime = DateTime.Parse(Console.ReadLine());
+                                int Stamp = int.Parse(Console.ReadLine());
                                 Console.WriteLine("Please type your message. (Limit = 250 characters)");
                                 string textMessage = Console.ReadLine();
-                                User.Edit(dateTime, textMessage, User2);
+                                User.Edit(Stamp, textMessage, User2);
                                 break;
                             case "delete":
                                 Console.WriteLine("Copy and Paste the date/time of the message you want to delete:");
-                                DateTime dateTime2 = DateTime.Parse(Console.ReadLine());
-                                User.Delete(dateTime2, User2);
+                                int Stamp1 = int.Parse(Console.ReadLine());
+                                User.Delete(Stamp1, User2);
                                 break;
                             default:
                                 Console.WriteLine("Please use one of the available actions.");
@@ -508,7 +508,7 @@ namespace Beacon
                                                 Console.Clear();
                                                 Console.WriteLine($"The user {UserOther} cannot be found!");
                                                 Console.WriteLine("Please enter a valid username:");
-                                                User2 = Console.ReadLine();
+                                                UserOther = Console.ReadLine();
                                             }
                                         }
                                         User.Update(UserOther);
@@ -524,7 +524,7 @@ namespace Beacon
                                                 Console.Clear();
                                                 Console.WriteLine($"The user {UserOther} cannot be found!");
                                                 Console.WriteLine("Please enter a valid username:");
-                                                User2 = Console.ReadLine();
+                                                UserOther = Console.ReadLine();
                                             }
                                         }
                                         User.Promote(UserOther);
@@ -540,7 +540,7 @@ namespace Beacon
                                                 Console.Clear();
                                                 Console.WriteLine($"The user {UserOther} cannot be found!");
                                                 Console.WriteLine("Please enter a valid username:");
-                                                User2 = Console.ReadLine();
+                                                UserOther = Console.ReadLine();
                                             }
                                         }
                                         User.Demote(UserOther);
@@ -556,7 +556,7 @@ namespace Beacon
                                                 Console.Clear();
                                                 Console.WriteLine($"The user {UserOther} cannot be found!");
                                                 Console.WriteLine("Please enter a valid username:");
-                                                User2 = Console.ReadLine();
+                                                UserOther = Console.ReadLine();
                                             }
                                         }
                                         Console.Clear();
@@ -569,7 +569,7 @@ namespace Beacon
                                             Console.WriteLine("[ Y / N]");
                                             SecurityCheck = Console.ReadLine();
                                         }
-                                        if (SecurityCheck.ToLower() != "y")
+                                        if (SecurityCheck.ToLower() == "y")
                                         {
                                             User.Destroy(UserOther);
                                         }

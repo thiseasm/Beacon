@@ -71,7 +71,7 @@ namespace Beacon
 
             using (dbcon)
             {
-                var SendMessage = dbcon.Query(QueryMessage, new { Sender = Username, Receiver = User2, Submission = DateTime.Now, Message = textMessage });
+                var SendMessage = dbcon.Query(QueryMessage, new { Sender = Username, Receiver = User2, Submission = DateTime.UtcNow, Message = textMessage });
             }
             Console.Clear();
             View(User2);
@@ -98,6 +98,7 @@ namespace Beacon
                 Console.WriteLine($"From:{m.Sender}");
                 Console.WriteLine($"To:{m.Receiver}, at: {m.dateTime}");
                 Console.WriteLine($"{m.Text}");
+                Console.WriteLine($"MessageID:{m.Stamp}");
                 Console.WriteLine("========================================");
 
             }
@@ -116,20 +117,20 @@ namespace Beacon
         }
 
 
-        public void Edit(DateTime DateTime, string Text, string User2)
+        public void Edit(int Stamp, string Text, string User2)
         {
             string Sender = Username;
             string Receiver = User2;
-            DateTime dateTime = DateTime;
+            int StampSelected = Stamp;
             string text = Text;
 
             SqlConnection dbcon = new SqlConnection(connectionString);
-            string Query = "UPDATE Messages SET Message = @Message WHERE (Sender = @sender AND Receiver = @receiver AND Submission = @datetime);";
+            string Query = "UPDATE Messages SET Message = @Message WHERE (Sender = @sender AND Receiver = @receiver  AND Stamp = @stamp);";
             
             using (dbcon)
             {
                 dbcon.Open();
-                var AlterMessage = dbcon.Query(Query, new { Message = text, sender = Sender, receiver = Receiver, datetime = dateTime });
+                var AlterMessage = dbcon.Query(Query, new { Message = text, sender = Sender, receiver = Receiver,  stamp=StampSelected });
             }
             Console.Clear();
             Console.WriteLine("Message has been altered!");
@@ -146,19 +147,19 @@ namespace Beacon
 
         }
 
-        public void Delete(DateTime DateTime, string User2)
+        public void Delete(int Stamp, string User2)
         {
             string Sender = Username;
             string Receiver = User2;
-            DateTime dateTime = DateTime;
+            int StampSelected = Stamp;
 
             SqlConnection dbcon = new SqlConnection(connectionString);
-            string Query = "DELETE FROM Messages WHERE (Sender = @sender AND Receiver = @receiver AND Submission = @datetime);";
+            string Query = "DELETE FROM Messages WHERE (Sender = @sender AND Receiver = @receiver  AND Stamp = @stamp);";
 
             using (dbcon)
             {
                 dbcon.Open();
-                var DeleteMessage = dbcon.Query(Query, new { sender = Sender, receiver = Receiver, datetime = dateTime });
+                var DeleteMessage = dbcon.Query(Query, new { sender = Sender, receiver = Receiver, stamp = StampSelected });
             }
 
             Console.WriteLine("Message has been deleted!");
@@ -256,10 +257,10 @@ namespace Beacon
 
             using (dbcon)
             {
-                dbcon.Open();
-                var DeleteUser = dbcon.Query(UsernameQuery, new { user = User2 });
+                dbcon.Open();                
                 var DeletePass = dbcon.Query(CredentialsQuery, new { user = User2 });
                 var DeleteHistory = dbcon.Query(MessageQuery, new { user = User2 });
+                var DeleteUser = dbcon.Query(UsernameQuery, new { user = User2 });
             }
 
             Console.WriteLine($"{User2} has been deleted!");
@@ -400,6 +401,7 @@ namespace Beacon
         internal string Receiver { get; set; }
         internal DateTime dateTime { get; set; }
         internal string Text { get; set; }
+        internal int Stamp { get; set; }
         
     }
 
