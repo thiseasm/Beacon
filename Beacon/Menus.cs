@@ -11,7 +11,7 @@ namespace Beacon
 {
     internal class Menu
     {
-        static string connectionString = "Server=THISEAS-PC\\SQLExpress;Database=Beacon;Integrated Security=true;";
+        static string connectionString = "Server=LAPTOP-GFPB19JQ\\SQLExpress;Database=Beacon;Integrated Security=true;";
         internal User LoginScreen()
         {
 
