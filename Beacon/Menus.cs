@@ -25,9 +25,14 @@ namespace Beacon
             Console.WriteLine("==============");
 
             SqlConnection dbcon = new SqlConnection(connectionString);
-
-            string Selection = Console.ReadLine();       
-            switch (Selection.ToLower())
+            string Selection = "";
+            do
+            {
+                Selection = Console.ReadLine();
+                Selection = Selection.ToLower();
+            } while (Selection != "l" && Selection != "r" && Selection != "x");
+                   
+            switch (Selection)
             {
                 case "x":
                     Console.Clear();
