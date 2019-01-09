@@ -385,7 +385,7 @@ namespace Beacon
             }
         }
 
-        internal void AdminMenu(Admin User)
+        internal void AdminScreen(Admin User)
         {
             bool InUse = true;
             Console.Clear();

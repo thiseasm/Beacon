@@ -66,13 +66,12 @@ namespace Beacon
 
 
             Console.WriteLine("Please type your message. (Limit = 250 characters)");
-            string textMessage = Console.ReadLine();
-            DateTime dateTime = DateTime.Now;
-            string QueryMessage = "INSERT INTO Messages (Sender, Receiver, Submission, Message) VALUES (@Sender, @Receiver, @Submission, @Message);";
+            string textMessage = Console.ReadLine();            
+            string QueryMessage = "INSERT INTO Messages (Sender, Receiver, Submission, Message) VALUES (@Sender, @Receiver, @Submission, '@Message');";
 
             using (dbcon)
             {
-                var SendMessage = dbcon.Query(QueryMessage, new { Sender = Username, Receiver = User2, Submission = dateTime, Message = textMessage });
+                var SendMessage = dbcon.Query(QueryMessage, new { Sender = Username, Receiver = User2, Submission = DateTime.Now, Message = textMessage });
             }
             Console.Clear();
             View(User2);
@@ -109,7 +108,7 @@ namespace Beacon
 
         string connectionString = "Server=THISEAS-PC\\SQLExpress;Database=Beacon;Integrated Security=true;";
 
-        public Member(string Name,  Authorization Authority) : base(Name,  Authorization.Member)
+        public Member(string Name,  Authorization Authority) : base(Name, Authority)
         {
 
         }
@@ -140,7 +139,7 @@ namespace Beacon
     {
         string connectionString = "Server=THISEAS-PC\\SQLExpress;Database=Beacon;Integrated Security=true;";
 
-        public Trusted(string Name,  Authorization Authority) : base(Name,  Authorization.Trusted)
+        public Trusted(string Name,  Authorization Authority) : base(Name, Authority)
         {
 
         }
@@ -169,7 +168,7 @@ namespace Beacon
     {
         string connectionString = "Server=THISEAS-PC\\SQLExpress;Database=Beacon;Integrated Security=true;";
 
-        public Admin(string Name, Authorization Authority) : base(Name, Authorization.Administrator)
+        public Admin(string Name, Authorization Authority) : base(Name, Authority)
         {
 
         }

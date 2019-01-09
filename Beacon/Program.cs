@@ -13,7 +13,7 @@ namespace Beacon
 
     class Program
     {
-        //TODO fix classes 
+        //LoginScreen always returns Authorization.Member
 
         static void Main(string[] args)
         {
@@ -25,8 +25,8 @@ namespace Beacon
 
                 if (User.Rank == Authorization.Administrator)
                 {
-                    Admin User1 = new Admin(User.Username, User.Rank);
-                    NewMenu.AdminMenu(User1);
+                    Admin User1 = new Admin(User.Username, Authorization.Administrator);
+                    NewMenu.AdminScreen(User1);
                 }
                 else if (User.Rank == Authorization.Trusted)
                 {
