@@ -13,21 +13,20 @@ namespace Beacon
     {
         static string connectionString = "Server=LAPTOP-GFPB19JQ\\SQLExpress;Database=Beacon;Integrated Security=true;";
         internal User LoginScreen()
-        {
-
-            Console.WriteLine("Welcome to the *Beacon Messenger System* est.2018!");
-            Console.WriteLine("Please follow the instructions provided below.");
-            Console.WriteLine("==============");
-            Console.WriteLine("Choose action:");
-            Console.WriteLine("L - Login");
-            Console.WriteLine("R - Register");
-            Console.WriteLine("X - Terminate");
-            Console.WriteLine("==============");
-
+        {           
             SqlConnection dbcon = new SqlConnection(connectionString);
             string Selection = "";
             do
             {
+                Console.Clear();
+                Console.WriteLine("Welcome to the *Beacon Messenger System* est.2018!");
+                Console.WriteLine("Please follow the instructions provided below.");
+                Console.WriteLine("==============");
+                Console.WriteLine("Choose action:");
+                Console.WriteLine("L - Login");
+                Console.WriteLine("R - Register");
+                Console.WriteLine("X - Terminate");
+                Console.WriteLine("==============");
                 Selection = Console.ReadLine();
                 Selection = Selection.ToLower();
             } while (Selection != "l" && Selection != "r" && Selection != "x");
@@ -271,7 +270,7 @@ namespace Beacon
                                 User.Send(User2);
                                 break;
                             case "edit":
-                                Console.WriteLine("Copy and Paste the date/time of the message you want to alter:");
+                                Console.WriteLine("Please enter the UniqueID of the message you want to alter:");
                                 int Stamp = int.Parse(Console.ReadLine());
                                 Console.WriteLine("Please type your message. (Limit = 250 characters)");
                                 string textMessage = Console.ReadLine();
@@ -358,14 +357,14 @@ namespace Beacon
                                 User.Send(User2);
                                 break;
                             case "edit":                                
-                                Console.WriteLine("Copy and Paste the date/time of the message you want to alter:");
+                                Console.WriteLine("Please enter the UniqueID of the message you want to alter:");
                                 int Stamp =int.Parse(Console.ReadLine());
                                 Console.WriteLine("Please type your message. (Limit = 250 characters)");
                                 string textMessage = Console.ReadLine();
                                 User.Edit(Stamp, textMessage, User2);
                                 break;
                             case "delete":
-                                Console.WriteLine("Copy and Paste the date/time of the message you want to delete:");
+                                Console.WriteLine("Please enter the UniqueID of the message you want to delete:");
                                 int Stamp1 = int.Parse(Console.ReadLine());                                
                                 User.Delete(Stamp1, User2);
                                 break;
@@ -452,14 +451,14 @@ namespace Beacon
                                 User.Send(User2);
                                 break;
                             case "edit":
-                                Console.WriteLine("Copy and Paste the date/time of the message you want to alter:");
+                                Console.WriteLine("Please enter the UniqueID of the message you want to alter:");
                                 int Stamp = int.Parse(Console.ReadLine());
                                 Console.WriteLine("Please type your message. (Limit = 250 characters)");
                                 string textMessage = Console.ReadLine();
                                 User.Edit(Stamp, textMessage, User2);
                                 break;
                             case "delete":
-                                Console.WriteLine("Copy and Paste the date/time of the message you want to delete:");
+                                Console.WriteLine("Please enter the UniqueID of the message you want to delete:");
                                 int Stamp1 = int.Parse(Console.ReadLine());
                                 User.Delete(Stamp1, User2);
                                 break;

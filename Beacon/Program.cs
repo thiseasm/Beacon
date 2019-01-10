@@ -43,15 +43,7 @@ namespace Beacon
                     Guest User1 = new Guest(User.Username, User.Rank);
                     NewMenu.GuestScreen(User1);
                 }
-            }
-           
-
-                
-
-            //TODO ADD MENU AFTER LOGIN
-            
-        }
-
-        
+            }                       
+        }       
     }
 }

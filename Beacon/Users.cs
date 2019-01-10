@@ -394,14 +394,14 @@ namespace Beacon
         
     }
 
-    internal class Message
+    public class Message
     {
         
-        internal string Sender { get; set; }
-        internal string Receiver { get; set; }
-        internal DateTime dateTime { get; set; }
-        internal string Text { get; set; }
-        internal int Stamp { get; set; }
+        public string Sender { get; set; }
+        public string Receiver { get; set; }
+        public DateTime dateTime { get; set; }
+        public string Text { get; set; }
+        public int Stamp { get; set; }
         
     }
 
