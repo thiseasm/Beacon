@@ -81,7 +81,7 @@ namespace Beacon
         {
             SqlConnection dbcon = new SqlConnection(connectionString);
 
-            var Messages = new List<Message>();
+            var Messages = new List<Data>();
             string HistoryQuery = "SELECT * FROM Messages WHERE((Sender = @Sender AND Receiver = @Receiver) OR (Sender = @Receiver AND Receiver = @Sender)) ORDER BY Submission;";
 
 
@@ -90,14 +90,14 @@ namespace Beacon
             {
                 dbcon.Open();
 
-                Messages.AddRange(dbcon.Query<Message>(HistoryQuery, new { Sender = Username, Receiver = User2 }));
+                Messages.AddRange(dbcon.Query<Data>(HistoryQuery, new { Sender = Username, Receiver = User2 }));
             }
 
             foreach (var m in Messages)
             {
                 Console.WriteLine($"From:{m.Sender}");
-                Console.WriteLine($"To:{m.Receiver}, at: {m.dateTime}");
-                Console.WriteLine($"{m.Text}");
+                Console.WriteLine($"To:{m.Receiver}, at: {m.Submission}");
+                Console.WriteLine($"{m.Message}");
                 Console.WriteLine($"MessageID:{m.Stamp}");
                 Console.WriteLine("========================================");
 
@@ -394,13 +394,13 @@ namespace Beacon
         
     }
 
-    public class Message
+    public class Data
     {
         
         public string Sender { get; set; }
         public string Receiver { get; set; }
-        public DateTime dateTime { get; set; }
-        public string Text { get; set; }
+        public DateTime Submission { get; set; }
+        public string Message { get; set; }
         public int Stamp { get; set; }
         
     }
