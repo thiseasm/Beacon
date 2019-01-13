@@ -2,10 +2,7 @@
 
 namespace Beacon
 {
-    enum Authorization { Guest, Member, Trusted, Administrator };
-
-    
-
+    enum Authorization { Guest, Member, Trusted, Administrator };  
     internal class User
     {
 

@@ -476,7 +476,9 @@ namespace Beacon
                                 break;
                             case "list":
                                 Console.Clear();
+                                Console.WriteLine("==================================");
                                 User.ListUsers();
+                                Console.WriteLine("==================================");
                                 Console.WriteLine("Choose action:");
                                 Console.WriteLine("create - Create a new account");
                                 Console.WriteLine("update - Change a user's username");
