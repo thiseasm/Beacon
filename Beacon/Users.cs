@@ -98,8 +98,6 @@ namespace Beacon
 
     internal class Trusted : Member, IDeleteMessage
     {
-        string connectionString = "Server=LAPTOP-GFPB19JQ\\SQLExpress;Database=Beacon;Integrated Security=true;";
-
         public Trusted(string Name,  Authorization Authority) : base(Name, Authority)
         {
 
@@ -119,8 +117,6 @@ namespace Beacon
 
     internal class Admin : Trusted, IGiveAuthority, IUserManipulation
     {
-        string connectionString = "Server=LAPTOP-GFPB19JQ\\SQLExpress;Database=Beacon;Integrated Security=true;";
-
         public Admin(string Name, Authorization Authority) : base(Name, Authority)
         {
 
