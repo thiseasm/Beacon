@@ -49,7 +49,7 @@ namespace Beacon
                         Console.WriteLine("Please pick a username:");
                         Name = Console.ReadLine();
 
-                        NameOriginal = Namecheck(Name);
+                        NameOriginal = BaseInteraction.Namecheck(Name);
 
                         if (NameOriginal == false)
                         {
@@ -79,7 +79,7 @@ namespace Beacon
 
                     } while (Pass1 != Pass2);
 
-                    Registration(Name, Pass1);
+                    BaseInteraction.Registration(Name, Pass1);
                     break;
                
                 case "l":
@@ -92,7 +92,7 @@ namespace Beacon
                         Console.WriteLine("Please input your Username:");
                         Username = Console.ReadLine();
 
-                        UserInBase = Namecheck(Username);
+                        UserInBase = BaseInteraction.Namecheck(Username);
 
                         if (UserInBase == true)
                         {
@@ -101,7 +101,7 @@ namespace Beacon
 
                     }
 
-                    CredentialCheck(Username);
+                    BaseInteraction.CredentialCheck(Username);
                     using (dbcon)
                     {
                         dbcon.Open();
@@ -164,7 +164,7 @@ namespace Beacon
 
                         while (UserInSystem == true)
                         {
-                            UserInSystem = Namecheck(User2);
+                            UserInSystem = BaseInteraction.Namecheck(User2);
                             if (UserInSystem == true)
                             {
                                 Console.Clear();
@@ -243,7 +243,7 @@ namespace Beacon
 
                         while (UserInSystem == true)
                         {
-                            UserInSystem = Namecheck(User2);
+                            UserInSystem = BaseInteraction.Namecheck(User2);
                             if (UserInSystem == true)
                             {
                                 Console.Clear();
@@ -329,7 +329,7 @@ namespace Beacon
 
                         while (UserInSystem == true)
                         {
-                            UserInSystem = Namecheck(User2);
+                            UserInSystem = BaseInteraction.Namecheck(User2);
                             if (UserInSystem == true)
                             {
                                 Console.Clear();
@@ -423,7 +423,7 @@ namespace Beacon
 
                         while (UserOtherInSystem == true)
                         {
-                            UserOtherInSystem = Namecheck(User2);
+                            UserOtherInSystem = BaseInteraction.Namecheck(User2);
                             if (UserOtherInSystem == true)
                             {
                                 Console.Clear();
@@ -505,7 +505,7 @@ namespace Beacon
                                         
                                         while (UserInList == true)
                                         {
-                                            UserInList = Namecheck(UserOther);
+                                            UserInList = BaseInteraction.Namecheck(UserOther);
                                             if (UserInList == true)
                                             {
                                                 Console.Clear();
@@ -521,7 +521,7 @@ namespace Beacon
                                         UserOther = Console.ReadLine();
                                         while (UserInList == true)
                                         {
-                                            UserInList = Namecheck(UserOther);
+                                            UserInList = BaseInteraction.Namecheck(UserOther);
                                             if (UserInList == true)
                                             {
                                                 Console.Clear();
@@ -537,7 +537,7 @@ namespace Beacon
                                         UserOther = Console.ReadLine();
                                         while (UserInList == true)
                                         {
-                                            UserInList = Namecheck(UserOther);
+                                            UserInList = BaseInteraction.Namecheck(UserOther);
                                             if (UserInList == true)
                                             {
                                                 Console.Clear();
@@ -553,7 +553,7 @@ namespace Beacon
                                         UserOther = Console.ReadLine();
                                         while (UserInList == true)
                                         {
-                                            UserInList = Namecheck(UserOther);
+                                            UserInList = BaseInteraction.Namecheck(UserOther);
                                             if (UserInList == true)
                                             {
                                                 Console.Clear();
@@ -606,77 +606,7 @@ namespace Beacon
                 }
             }
         }
-
-        static bool Namecheck(string Name)
-        {
-            SqlConnection dbcon = new SqlConnection(connectionString);
-            bool nameOriginal;
-
-            using (dbcon)
-            {
-                dbcon.Open();
-                var usernameCheck = dbcon.Query("SELECT * FROM Accounts WHERE Username = @Username;", new { Username = Name }).Count();
-
-                if (usernameCheck == 1)
-                {
-                    nameOriginal = false;
-                }
-                else
-                {
-                    nameOriginal = true;
-                }
-                return nameOriginal;
-            }
-        }
-
-        static void Registration(string Name, string Pass1)
-        {
-            SqlConnection dbcon = new SqlConnection(connectionString);
-            using (dbcon)
-            {
-                dbcon.Open();
-
-                string registrationQuery = "INSERT INTO Accounts (Username,Rank) VALUES (@name, @guest);";
-                var accountInsertion = dbcon.Query(registrationQuery, new { name = Name, guest = "Guest" });
-
-                string passQuery = "INSERT INTO Credentials (Username,Password) VALUES (@name, @pass);";
-                var passInsertion = dbcon.Query(passQuery, new { name = Name, pass = Pass1 });
-            }
-            Console.WriteLine($"The user {Name} has been created.");
-            Console.WriteLine("Please reopen the application to login with your credentials.");
-            Console.WriteLine("Press ANY key to terminate:");
-            Console.ReadKey();
-            Environment.Exit(0);
-        }
-
-        static bool CredentialCheck(string Username)
-        {          
-
-            SqlConnection dbcon = new SqlConnection(connectionString);
-            using (dbcon)
-            {
-                dbcon.Open();
-                while (true)
-                {
-                    Console.WriteLine("Please input your Password:");
-                    string password = Console.ReadLine();
-                    var paperCheck = dbcon.Query("SELECT * FROM Credentials WHERE Username = @name AND Password = @pass;", new { name = Username, pass = password }).Count();
-
-                    if (paperCheck == 1)
-                    {
-                        return true;
-                    }
-                    else
-                    {
-                        Console.WriteLine("Password is incorrect!");
-                        Console.WriteLine("Access Denied!");
-                    }
-                }
-
-            }
-
-        }
-        
+              
     }
 
 }

@@ -21,9 +21,7 @@ namespace Beacon
 
     internal class Guest : User, IViewHistory, ISendMessage
     {
-        string connectionString = "Server=LAPTOP-GFPB19JQ\\SQLExpress;Database=Beacon;Integrated Security=true;";
-        
-
+             
         public Guest(string Name, Authorization Authority)
         {
             Username = Name;         
@@ -32,65 +30,41 @@ namespace Beacon
 
         public void ChangePassword()
         {
-            string Pass1;
-            string Pass2;
+            string pass1;
+            string pass2;
 
             do
             {
 
                 Console.WriteLine("Please pick a password:");
-                Pass1 = Console.ReadLine();
+                pass1 = Console.ReadLine();
 
                 Console.WriteLine("Please enter your password a second time:");
-                Pass2 = Console.ReadLine();
+                pass2 = Console.ReadLine();
 
-                if (Pass1 != Pass2)
+                if (pass1 != pass2)
                 {
                     Console.WriteLine("The passwords do not match!");
                 }
 
-            } while (Pass1 != Pass2);
+            } while (pass1 != pass2);
 
-            using (SqlConnection dbcon = new SqlConnection(connectionString))
-            {
-                dbcon.Open();
-                var passUpdate = dbcon.Query("UPDATE Credentials SET Password = @pass WHERE Username = @name;", new { pass = Pass1, name = Username });
-            }
-            Console.WriteLine("Your password has been successfully changed!");
+            BaseInteraction.PassChange(pass1, Username);
         }
 
         public void Send(string User2)
         {
-            SqlConnection dbcon = new SqlConnection(connectionString);
-
-
             Console.WriteLine("Please type your message. (Limit = 250 characters)");
             string textMessage = Console.ReadLine();            
-            string queryMessage = "INSERT INTO Messages (Sender, Receiver, Submission, Message) VALUES (@Sender, @Receiver, @Submission, @Message);";
 
-            using (dbcon)
-            {
-                var sendMessage = dbcon.Query(queryMessage, new { Sender = Username, Receiver = User2, Submission = DateTime.UtcNow, Message = textMessage });
-            }
+            BaseInteraction.SendMessage(Username, User2, textMessage);
             Console.Clear();
             View(User2);
         }
 
         public void View(string User2)
         {
-            SqlConnection dbcon = new SqlConnection(connectionString);
-
-            var messages = new List<Data>();
-            string historyQuery = "SELECT * FROM Messages WHERE((Sender = @Sender AND Receiver = @Receiver) OR (Sender = @Receiver AND Receiver = @Sender)) ORDER BY Submission;";
-
-
-
-            using (dbcon)
-            {
-                dbcon.Open();
-
-                messages.AddRange(dbcon.Query<Data>(historyQuery, new { Sender = Username, Receiver = User2 }));
-            }
+            var messages = BaseInteraction.GetMessages(Username, User2);
 
             foreach (var m in messages)
             {
@@ -108,8 +82,6 @@ namespace Beacon
     internal class Member : Guest, IEditMessage
     {
 
-        string connectionString = "Server=LAPTOP-GFPB19JQ\\SQLExpress;Database=Beacon;Integrated Security=true;";
-
         public Member(string Name,  Authorization Authority) : base(Name, Authority)
         {
 
@@ -123,14 +95,7 @@ namespace Beacon
             int stampSelected = Stamp;
             string text = Text;
 
-            SqlConnection dbcon = new SqlConnection(connectionString);
-            string Query = "UPDATE Messages SET Message = @Message WHERE (Sender = @sender AND Receiver = @receiver  AND Stamp = @stamp);";
-            
-            using (dbcon)
-            {
-                dbcon.Open();
-                var alterMessage = dbcon.Query(Query, new { Message = text, sender = sender, receiver = receiver,  stamp=stampSelected });
-            }
+            BaseInteraction.EditMessage(text, sender, receiver, stampSelected);
             Console.Clear();
             Console.WriteLine("Message has been altered!");
             View(User2);
@@ -152,15 +117,7 @@ namespace Beacon
             string receiver = User2;
             int stampSelected = Stamp;
 
-            SqlConnection dbcon = new SqlConnection(connectionString);
-            string Query = "DELETE FROM Messages WHERE (Sender = @sender AND Receiver = @receiver  AND Stamp = @stamp);";
-
-            using (dbcon)
-            {
-                dbcon.Open();
-                var deleteMessage = dbcon.Query(Query, new { sender = sender, receiver = receiver, stamp = stampSelected });
-            }
-
+            BaseInteraction.MessageDeletion(sender, receiver, stampSelected);
             Console.WriteLine("Message has been deleted!");
             View(User2);
         }
@@ -185,7 +142,7 @@ namespace Beacon
                 Console.WriteLine("Please pick a username:");
                 name = Console.ReadLine();
 
-                nameOriginal = Namecheck(name);
+                nameOriginal = BaseInteraction.Namecheck(name);
 
                 if (nameOriginal == false)
                 {
@@ -195,25 +152,16 @@ namespace Beacon
 
             }
 
-            string oass1 = "0000";            
+            string pass1 = "0000";            
 
-            Registration(name, oass1);
+            BaseInteraction.Registration(name, pass1);
             Console.Clear();
             ListUsers();
         }
 
         public void Demote(string User2)
         {
-            SqlConnection dbcon = new SqlConnection(connectionString);
-            string rank;
-
-            using (dbcon)
-            {
-                dbcon.Open();
-
-                rank = dbcon.Query<string>("SELECT Rank FROM Accounts WHERE Username = @name", new { name = User2 }).Single();
-            }
-
+            string rank = BaseInteraction.RankCheck(User2);
             string newRank = "";
 
             if (rank == "Administrator")
@@ -234,14 +182,7 @@ namespace Beacon
                 return;
             }
 
-            SqlConnection dbcon1 = new SqlConnection(connectionString);
-            using (dbcon1)
-            {
-                dbcon1.Open();
-
-                var Demotion = dbcon1.Query("UPDATE Accounts SET Rank = @newrank WHERE Username = @name", new { newrank = newRank, name = User2 });
-            }
-
+            BaseInteraction.Demotion(newRank, User2);
             Console.WriteLine($"{User2} has been demoted to {newRank}!");
             Console.Clear();
             ListUsers();
@@ -249,18 +190,7 @@ namespace Beacon
 
         public void Destroy(string User2)
         {
-            SqlConnection dbcon = new SqlConnection(connectionString);
-            string usernameQuery = "DELETE FROM Accounts WHERE Username = @user;";
-            string credentialsQuery = "DELETE FROM Credentials WHERE Username = @user;";
-            string messageQuery = "DELETE FROM Messages WHERE (Sender = @user OR Receiver = @user);";
-
-            using (dbcon)
-            {
-                dbcon.Open();                
-                var deletePass = dbcon.Query(credentialsQuery, new { user = User2 });
-                var deleteHistory = dbcon.Query(messageQuery, new { user = User2 });
-                var deleteUser = dbcon.Query(usernameQuery, new { user = User2 });
-            }
+            BaseInteraction.DeleteUser(User2);
 
             Console.WriteLine($"{User2} has been deleted!");
             ListUsers();
@@ -268,17 +198,7 @@ namespace Beacon
 
         public void Promote(string User2)
         {
-            SqlConnection dbcon = new SqlConnection(connectionString);
-            string rank;
-
-            using (dbcon)
-            {
-                dbcon.Open();
-
-                rank = dbcon.Query<string>("SELECT Rank FROM Accounts WHERE Username = @name", new { name = User2 }).Single();
-                
-            }
-
+            string rank = BaseInteraction.RankCheck(User2);
             string newRank = "";
 
             if (rank == "Guest")
@@ -299,13 +219,7 @@ namespace Beacon
                 return;
             }
 
-            SqlConnection dbcon1 = new SqlConnection(connectionString);
-            using (dbcon1)
-            {
-                dbcon1.Open();
-
-                var promotion = dbcon1.Query("UPDATE Accounts SET Rank = @newrank WHERE Username = @name", new { newrank = newRank, name = User2 });
-            }
+            BaseInteraction.Promotion(newRank, User2);
             Console.Clear();
             Console.WriteLine($"{User2} has been promoted to {newRank}!");
             ListUsers();
@@ -313,16 +227,10 @@ namespace Beacon
 
         public void Update(string User2)
         {
-            SqlConnection dbcon = new SqlConnection(connectionString);
-            string accountQuery = "UPDATE Accounts SET Username = @user WHERE Username = @user2;";
-
             Console.WriteLine($"Pick a new username for {User2}:");
             string usernameNEW = Console.ReadLine();
-            using (dbcon)
-            {
-                dbcon.Open();
-                var updateUser = dbcon.Query(accountQuery, new { user=usernameNEW, user2 = User2 });
-            }
+
+            BaseInteraction.UpdateInfo(usernameNEW, User2);
             Console.Clear();
             Console.WriteLine($"{User2} has been changed to {usernameNEW}");
             ListUsers();
@@ -330,67 +238,14 @@ namespace Beacon
 
         public void ListUsers()
         {
-            SqlConnection dbcon = new SqlConnection(connectionString);
-            string list = "SELECT * FROM Accounts;";
-            var users = new List<User>();
-
-            using (dbcon)
-            {
-                dbcon.Open();
-                users.AddRange(dbcon.Query<User>(list));
-            }
+            var users = BaseInteraction.GetList();
 
             foreach (var user in users)
             {
                 Console.WriteLine(user.Username + " - " + user.Rank);
             }
         }
-
-        static bool Namecheck(string Name)
-        {
-            string connectionString = "Server=LAPTOP-GFPB19JQ\\SQLExpress;Database=Beacon;Integrated Security=true;";
-            SqlConnection dbcon = new SqlConnection(connectionString);
-            bool nameOriginal;
-
-            using (dbcon)
-            {
-                dbcon.Open();
-                var usernameCheck = dbcon.Query("SELECT * FROM Accounts WHERE Username = @Username;", new { Username = Name }).Count();
-
-                if (usernameCheck == 1)
-                {
-                    nameOriginal = false;
-                }
-                else
-                {
-                    nameOriginal = true;
-                }
-
-                return nameOriginal;
-            }
-        }
-
-        static void Registration(string Name, string Pass1)
-        {
-            string connectionString = "Server=LAPTOP-GFPB19JQ\\SQLExpress;Database=Beacon;Integrated Security=true;";
-            SqlConnection dbcon = new SqlConnection(connectionString);
-            using (dbcon)
-            {
-                dbcon.Open();
-
-                string registrationQuery = "INSERT INTO Accounts (Username,Rank) VALUES (@name, @guest);";
-                var accountInsertion = dbcon.Query(registrationQuery, new { name = Name, guest = "Guest" });
-
-                
-                string passQuery = "INSERT INTO Credentials (Username,Password) VALUES (@name, @pass);";
-                var passInsertion = dbcon.Query(passQuery, new { name = Name, pass = Pass1 });
-            }
-
-            Console.WriteLine($"The user {Name} has been created.");
-            Console.WriteLine($"Please use the password:{Pass1} to login for the first time!");
-        }
-
-        
+       
     }
 
     public class Data
