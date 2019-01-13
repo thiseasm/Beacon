@@ -66,7 +66,6 @@ namespace Beacon
                     do
                     {
 
-                        //TODO ADD PASSWORD MASKING
                         Console.WriteLine("Please pick a password:");
                         Pass1 = Console.ReadLine();
 
@@ -611,22 +610,22 @@ namespace Beacon
         static bool Namecheck(string Name)
         {
             SqlConnection dbcon = new SqlConnection(connectionString);
-            bool NameOriginal;
+            bool nameOriginal;
 
             using (dbcon)
             {
                 dbcon.Open();
-                var UsernameCheck = dbcon.Query("SELECT * FROM Accounts WHERE Username = @Username;", new { Username = Name }).Count();
+                var usernameCheck = dbcon.Query("SELECT * FROM Accounts WHERE Username = @Username;", new { Username = Name }).Count();
 
-                if (UsernameCheck == 1)
+                if (usernameCheck == 1)
                 {
-                    NameOriginal = false;
+                    nameOriginal = false;
                 }
                 else
                 {
-                    NameOriginal = true;
+                    nameOriginal = true;
                 }
-                return NameOriginal;
+                return nameOriginal;
             }
         }
 
@@ -637,12 +636,11 @@ namespace Beacon
             {
                 dbcon.Open();
 
-                string RegistrationQuery = "INSERT INTO Accounts (Username,Rank) VALUES (@name, @guest);";
-                var AccountInsertion = dbcon.Query(RegistrationQuery, new { name = Name, guest = "Guest" });
+                string registrationQuery = "INSERT INTO Accounts (Username,Rank) VALUES (@name, @guest);";
+                var accountInsertion = dbcon.Query(registrationQuery, new { name = Name, guest = "Guest" });
 
-                //TODO ADD PASSWORD ENCRYPTION
-                string PassQuery = "INSERT INTO Credentials (Username,Password) VALUES (@name, @pass);";
-                var PassInsertion = dbcon.Query(PassQuery, new { name = Name, pass = Pass1 });
+                string passQuery = "INSERT INTO Credentials (Username,Password) VALUES (@name, @pass);";
+                var passInsertion = dbcon.Query(passQuery, new { name = Name, pass = Pass1 });
             }
             Console.WriteLine($"The user {Name} has been created.");
             Console.WriteLine("Please reopen the application to login with your credentials.");
@@ -652,8 +650,7 @@ namespace Beacon
         }
 
         static bool CredentialCheck(string Username)
-        {
-            //TODO ADD PASSWORD MASKING            
+        {          
 
             SqlConnection dbcon = new SqlConnection(connectionString);
             using (dbcon)
@@ -662,10 +659,10 @@ namespace Beacon
                 while (true)
                 {
                     Console.WriteLine("Please input your Password:");
-                    string Password = Console.ReadLine();
-                    var PaperCheck = dbcon.Query("SELECT * FROM Credentials WHERE Username = @name AND Password = @pass;", new { name = Username, pass = Password }).Count();
+                    string password = Console.ReadLine();
+                    var paperCheck = dbcon.Query("SELECT * FROM Credentials WHERE Username = @name AND Password = @pass;", new { name = Username, pass = password }).Count();
 
-                    if (PaperCheck == 1)
+                    if (paperCheck == 1)
                     {
                         return true;
                     }

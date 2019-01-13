@@ -13,7 +13,6 @@ namespace Beacon
 
     class Program
     {
-        //LoginScreen always returns Authorization.Member
 
         static void Main(string[] args)
         {

@@ -6,33 +6,33 @@ using System.Threading.Tasks;
 
 namespace Beacon
 {
-    interface SendMessage
+    interface ISendMessage
     {
         void Send(string User2);
     }
 
-    interface ViewHistory
+    interface IViewHistory
     {
         void View(string User2);
     }
 
-    interface EditMessage
+    interface IEditMessage
     {
         void Edit(int Stamp, string Text, string User2);
     }
 
-    interface DeleteMessage
+    interface IDeleteMessage
     {
         void Delete(int Stamp, string User2);
     }
 
-    interface GiveAuthority
+    interface IGiveAuthority
     {
         void Promote(string User2);
         void Demote(string User2);
     }
 
-    interface UserManipulation
+    interface IUserManipulation
     {
         void Create();
         void Destroy(string User2);
