@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
@@ -9,11 +10,12 @@ namespace Beacon
     class BaseInteraction
     {
         static string connectionString = "Server=LAPTOP-GFPB19JQ\\SQLExpress;Database=Beacon;Integrated Security=true;";
-        static SqlConnection dbcon = new SqlConnection(connectionString);
+        
 
         static internal void PassChange(string Pass1, string Username)
         {
-            using (SqlConnection dbcon = new SqlConnection(connectionString))
+            SqlConnection dbcon = new SqlConnection(connectionString);
+            using (dbcon)
             {
                 dbcon.Open();
                 var passUpdate = dbcon.Query("UPDATE Credentials SET Password = @pass WHERE Username = @name;", new { pass = Pass1, name = Username });
@@ -24,7 +26,7 @@ namespace Beacon
         static internal void SendMessage(string Username, string User2, string textMessage)
         {
             string queryMessage = "INSERT INTO Messages (Sender, Receiver, Submission, Message) VALUES (@Sender, @Receiver, @Submission, @Message);";
-
+            SqlConnection dbcon = new SqlConnection(connectionString);
             using (dbcon)
             {
                 var sendMessage = dbcon.Query(queryMessage, new { Sender = Username, Receiver = User2, Submission = DateTime.UtcNow, Message = textMessage });
@@ -35,7 +37,7 @@ namespace Beacon
         {
             var messages = new List<Data>();
             string historyQuery = "SELECT * FROM Messages WHERE((Sender = @Sender AND Receiver = @Receiver) OR (Sender = @Receiver AND Receiver = @Sender)) ORDER BY Submission;";
-
+            SqlConnection dbcon = new SqlConnection(connectionString);
             using (dbcon)
             {
                 dbcon.Open();
@@ -49,7 +51,7 @@ namespace Beacon
         static internal void EditMessage(string text, string sender, string receiver, int stampSelected)
         {
             string Query = "UPDATE Messages SET Message = @Message WHERE (Sender = @sender AND Receiver = @receiver  AND Stamp = @stamp);";
-
+            SqlConnection dbcon = new SqlConnection(connectionString);
             using (dbcon)
             {
                 dbcon.Open();
@@ -60,7 +62,7 @@ namespace Beacon
         static internal void MessageDeletion(string sender, string receiver, int stampSelected)
         {
             string Query = "DELETE FROM Messages WHERE (Sender = @sender AND Receiver = @receiver  AND Stamp = @stamp);";
-
+            SqlConnection dbcon = new SqlConnection(connectionString);
             using (dbcon)
             {
                 dbcon.Open();
@@ -70,6 +72,7 @@ namespace Beacon
 
         static internal string RankCheck(string User2)
         {
+            SqlConnection dbcon = new SqlConnection(connectionString);
             string rank;
             using (dbcon)
             {
@@ -82,6 +85,7 @@ namespace Beacon
 
         static internal void Demotion(string newRank, string User2)
         {
+            SqlConnection dbcon = new SqlConnection(connectionString);
             using (dbcon)
             {
                 dbcon.Open();
@@ -92,6 +96,7 @@ namespace Beacon
 
         static internal void Promotion(string newRank, string User2)
         {
+            SqlConnection dbcon = new SqlConnection(connectionString);
             using (dbcon)
             {
                 dbcon.Open();
@@ -103,7 +108,7 @@ namespace Beacon
         static internal void UpdateInfo(string usernameNEW, string User2)
         {
             string accountQuery = "UPDATE Accounts SET Username = @user WHERE Username = @user2;";
-
+            SqlConnection dbcon = new SqlConnection(connectionString);
             using (dbcon)
             {
                 dbcon.Open();
@@ -115,7 +120,7 @@ namespace Beacon
         {
             string list = "SELECT * FROM Accounts;";
             var users = new List<User>();
-
+            SqlConnection dbcon = new SqlConnection(connectionString);
             using (dbcon)
             {
                 dbcon.Open();
@@ -126,6 +131,7 @@ namespace Beacon
 
         static internal void DeleteUser(string User2)
         {
+            SqlConnection dbcon = new SqlConnection(connectionString);
             string usernameQuery = "DELETE FROM Accounts WHERE Username = @user;";
             string credentialsQuery = "DELETE FROM Credentials WHERE Username = @user;";
             string messageQuery = "DELETE FROM Messages WHERE (Sender = @user OR Receiver = @user);";
@@ -142,7 +148,7 @@ namespace Beacon
         static internal bool Namecheck(string Name)
         {
             bool nameOriginal;
-
+            SqlConnection dbcon = new SqlConnection(connectionString);
             using (dbcon)
             {
                 dbcon.Open();
@@ -163,6 +169,7 @@ namespace Beacon
 
         static internal void Registration(string Name, string Pass1)
         {
+            SqlConnection dbcon = new SqlConnection(connectionString);
             using (dbcon)
             {
                 dbcon.Open();
@@ -182,7 +189,7 @@ namespace Beacon
 
         static internal bool CredentialCheck(string Username)
         {
-
+            SqlConnection dbcon = new SqlConnection(connectionString);
             using (dbcon)
             {
                 dbcon.Open();
