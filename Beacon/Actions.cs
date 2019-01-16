@@ -18,7 +18,7 @@ namespace Beacon
 
     interface IEditMessage
     {
-        void Edit(int Stamp, string Text, string User2);
+        void Edit(int Stamp, string User2);
     }
 
     interface IDeleteMessage

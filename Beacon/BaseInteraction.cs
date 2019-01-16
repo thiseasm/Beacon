@@ -48,6 +48,27 @@ namespace Beacon
             return messages;       
         }
 
+        static internal bool SenderIdMatching(string Username, int StampID)
+        {
+            string Query = "SELECT * FROM Messages WHERE ( Sender = @sender AND Stamp = @stamp);";
+            SqlConnection dbcon = new SqlConnection(connectionString);
+            int match;
+  
+            using (dbcon)
+            {
+                match = dbcon.Query(Query, new { sender = Username, stamp = StampID }).Count(); 
+            }
+
+            if (match == 1)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
         static internal void EditMessage(string text, string sender, string receiver, int stampSelected)
         {
             string Query = "UPDATE Messages SET Message = @Message WHERE (Sender = @sender AND Receiver = @receiver  AND Stamp = @stamp);";

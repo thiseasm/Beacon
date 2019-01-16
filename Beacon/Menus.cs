@@ -267,10 +267,8 @@ namespace Beacon
                                 break;
                             case "edit":
                                 Console.WriteLine("Please enter the UniqueID of the message you want to alter:");
-                                int Stamp = int.Parse(Console.ReadLine());
-                                Console.WriteLine("Please type your message. (Limit = 250 characters)");
-                                string textMessage = Console.ReadLine();
-                                User.Edit(Stamp, textMessage, User2);
+                                int Stamp = int.Parse(Console.ReadLine());                               
+                                User.Edit(Stamp, User2);
                                 break;
                             default:
                                 Console.WriteLine("Please use one of the available actions.");
@@ -355,9 +353,7 @@ namespace Beacon
                             case "edit":                                
                                 Console.WriteLine("Please enter the UniqueID of the message you want to alter:");
                                 int Stamp =int.Parse(Console.ReadLine());
-                                Console.WriteLine("Please type your message. (Limit = 250 characters)");
-                                string textMessage = Console.ReadLine();
-                                User.Edit(Stamp, textMessage, User2);
+                                User.Edit(Stamp, User2);
                                 break;
                             case "delete":
                                 Console.WriteLine("Please enter the UniqueID of the message you want to delete:");
@@ -449,9 +445,7 @@ namespace Beacon
                             case "edit":
                                 Console.WriteLine("Please enter the UniqueID of the message you want to alter:");
                                 int Stamp = int.Parse(Console.ReadLine());
-                                Console.WriteLine("Please type your message. (Limit = 250 characters)");
-                                string textMessage = Console.ReadLine();
-                                User.Edit(Stamp, textMessage, User2);
+                                User.Edit(Stamp, User2);
                                 break;
                             case "delete":
                                 Console.WriteLine("Please enter the UniqueID of the message you want to delete:");

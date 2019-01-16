@@ -79,17 +79,27 @@ namespace Beacon
         }
 
 
-        public void Edit(int Stamp, string Text, string User2)
+        public void Edit(int Stamp, string User2)
         {
             string sender = Username;
             string receiver = User2;
             int stampSelected = Stamp;
-            string text = Text;
+            bool securityCheck = BaseInteraction.SenderIdMatching(sender, stampSelected);
 
-            BaseInteraction.EditMessage(text, sender, receiver, stampSelected);
-            Console.Clear();
-            Console.WriteLine("Message has been altered!");
-            View(User2);
+            if (securityCheck == true)
+            {
+                Console.WriteLine("Please type your message. (Limit = 250 characters)");
+                string textMessage = Console.ReadLine();
+                BaseInteraction.EditMessage(textMessage, sender, receiver, stampSelected);
+                Console.Clear();
+                Console.WriteLine("Message has been altered!");
+                View(User2);
+            }
+            else
+            {
+                Console.Clear();
+                Console.WriteLine("You can only edit messages YOU have sent!");
+            }                                               
         }
     }
 
@@ -105,10 +115,22 @@ namespace Beacon
             string sender = Username;
             string receiver = User2;
             int stampSelected = Stamp;
+            bool securityCheck = BaseInteraction.SenderIdMatching(sender, stampSelected);
 
-            BaseInteraction.MessageDeletion(sender, receiver, stampSelected);
-            Console.WriteLine("Message has been deleted!");
-            View(User2);
+            if (securityCheck == true)
+            {
+                BaseInteraction.MessageDeletion(sender, receiver, stampSelected);
+                Console.Clear();
+                Console.WriteLine("Message has been deleted!");
+                View(User2);
+            }
+            else
+            {
+                Console.Clear();
+                Console.WriteLine("You can only delete messages YOU have sent!");
+            }
+
+            
         }
     }
 
