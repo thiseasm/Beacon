@@ -10,121 +10,122 @@ namespace Beacon
     {
         static string connectionString = "Server=LAPTOP-GFPB19JQ\\SQLExpress;Database=Beacon;Integrated Security=true;";
         internal User LoginScreen()
-        {           
-            SqlConnection dbcon = new SqlConnection(connectionString);
-            string Selection = "";
-            do
+        {    while (true)
             {
-                Console.Clear();
-                Console.WriteLine("Welcome to the *Beacon Messenger System* est.2018!");
-                Console.WriteLine("Please follow the instructions provided below.");
-                Console.WriteLine("==============");
-                Console.WriteLine("Choose action:");
-                Console.WriteLine("L - Login");
-                Console.WriteLine("R - Register");
-                Console.WriteLine("X - Terminate");
-                Console.WriteLine("==============");
-                Selection = Console.ReadLine();
-                Selection = Selection.ToLower();
-            } while (Selection != "l" && Selection != "r" && Selection != "x");
-                   
-            switch (Selection)
-            {
-                case "x":
+                SqlConnection dbcon = new SqlConnection(connectionString);
+                string Selection = "";
+                do
+                {
                     Console.Clear();
-                    Console.WriteLine("Thank you for choosing us for your communication needs.");
-                    Console.WriteLine("The program will now terminate.");
-                    Environment.Exit(0);
-                    break;
-                case "r":
-                    Console.Clear();
-                    bool NameOriginal = false;
-                    string Name = "";
-                    
-                    while (NameOriginal == false)
-                    {
-                        Console.WriteLine("Please pick a username:");
-                        Name = Console.ReadLine();
+                    Console.WriteLine("Welcome to the *Beacon Messenger System* est.2018!");
+                    Console.WriteLine("Please follow the instructions provided below.");
+                    Console.WriteLine("==============");
+                    Console.WriteLine("Choose action:");
+                    Console.WriteLine("L - Login");
+                    Console.WriteLine("R - Register");
+                    Console.WriteLine("X - Terminate");
+                    Console.WriteLine("==============");
+                    Selection = Console.ReadLine();
+                    Selection = Selection.ToLower();
+                } while (Selection != "l" && Selection != "r" && Selection != "x");
 
-                        NameOriginal = BaseInteraction.Namecheck(Name);
-
-                        if (NameOriginal == false)
-                        {
-                            Console.WriteLine("This Username is already taken!");
-                            Console.WriteLine("Please choose something else.");
-                        }
-
-                    }
-
-
-                    string Pass1;
-                    string Pass2;
-                    
-                    do
-                    {
-
-                        Console.WriteLine("Please pick a password:");
-                        Pass1 = Console.ReadLine();
-
-                        Console.WriteLine("Please enter your password a second time:");
-                        Pass2 = Console.ReadLine();
+                switch (Selection)
+                {
+                    case "x":
                         Console.Clear();
-                        if (Pass1 != Pass2)
+                        Console.WriteLine("Thank you for choosing us for your communication needs.");
+                        Console.WriteLine("The program will now terminate.");
+                        Environment.Exit(0);
+                        break;
+                    case "r":
+                        Console.Clear();
+                        bool NameOriginal = false;
+                        string Name = "";
+
+                        while (NameOriginal == false)
                         {
-                            Console.WriteLine("The passwords do not match!");
+                            Console.WriteLine("Please pick a username:");
+                            Name = Console.ReadLine();
+
+                            NameOriginal = BaseInteraction.Namecheck(Name);
+
+                            if (NameOriginal == false)
+                            {
+                                Console.WriteLine("This Username is already taken!");
+                                Console.WriteLine("Please choose something else.");
+                            }
+
                         }
 
-                    } while (Pass1 != Pass2);
 
-                    BaseInteraction.Registration(Name, Pass1);
-                    break;
-               
-                case "l":
-                    Console.Clear();
-                    bool UserInBase = true;
-                    string Username = "";
+                        string Pass1;
+                        string Pass2;
 
-                    while (UserInBase == true)
-                    {
-                        Console.WriteLine("Please input your Username:");
-                        Username = Console.ReadLine();
-
-                        UserInBase = BaseInteraction.Namecheck(Username);
-
-                        if (UserInBase == true)
+                        do
                         {
-                            Console.WriteLine($"The user {Username} does not exist!");
+
+                            Console.WriteLine("Please pick a password:");
+                            Pass1 = Console.ReadLine();
+
+                            Console.WriteLine("Please enter your password a second time:");
+                            Pass2 = Console.ReadLine();
+                            Console.Clear();
+                            if (Pass1 != Pass2)
+                            {
+                                Console.WriteLine("The passwords do not match!");
+                            }
+
+                        } while (Pass1 != Pass2);
+
+                        BaseInteraction.Registration(Name, Pass1);
+                        break;
+
+                    case "l":
+                        Console.Clear();
+                        bool UserInBase = true;
+                        string Username = "";
+
+                        while (UserInBase == true)
+                        {
+                            Console.WriteLine("Please input your Username:");
+                            Username = Console.ReadLine();
+
+                            UserInBase = BaseInteraction.Namecheck(Username);
+
+                            if (UserInBase == true)
+                            {
+                                Console.WriteLine($"The user {Username} does not exist!");
+                            }
+
                         }
 
-                    }
+                        BaseInteraction.CredentialCheck(Username);
+                        using (dbcon)
+                        {
+                            dbcon.Open();
 
-                    BaseInteraction.CredentialCheck(Username);
-                    using (dbcon)
-                    {
-                        dbcon.Open();
+                            var AuthorityCheck = dbcon.Query<string>("SELECT Rank FROM Accounts WHERE Username = @name;", new { name = Username }).Single();
 
-                        var AuthorityCheck =dbcon.Query<string>("SELECT Rank FROM Accounts WHERE Username = @name;", new { name = Username }).Single();
-                        
-                        if (AuthorityCheck == "Guest")
-                        {
-                            return new Guest(Username, Authorization.Guest);
+                            if (AuthorityCheck == "Guest")
+                            {
+                                return new Guest(Username, Authorization.Guest);
+                            }
+                            else if (AuthorityCheck == "Member")
+                            {
+                                return new Member(Username, Authorization.Member);
+                            }
+                            else if (AuthorityCheck == "Trusted")
+                            {
+                                return new Trusted(Username, Authorization.Trusted);
+                            }
+                            else if (AuthorityCheck == "Administrator")
+                            {
+                                return new Admin(Username, Authorization.Administrator);
+                            }
                         }
-                        else if (AuthorityCheck == "Member")
-                        {
-                            return new Member(Username, Authorization.Member);
-                        }
-                        else if (AuthorityCheck == "Trusted")
-                        {
-                            return new Trusted(Username, Authorization.Trusted);
-                        }
-                        else if (AuthorityCheck == "Administrator")
-                        {
-                            return new Admin(Username, Authorization.Administrator);
-                        }
-                    }
-                    break;
-            }
-            return null;
+                        break;
+                }
+            }                               
         }
 
         internal void GuestScreen(Guest User)
