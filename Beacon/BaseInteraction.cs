@@ -108,11 +108,15 @@ namespace Beacon
         static internal void UpdateInfo(string usernameNEW, string User2)
         {
             string accountQuery = "UPDATE Accounts SET Username = @user WHERE Username = @user2;";
+            string sendQuery = "UPDATE Messages SET Sender = @user WHERE Sender = @user2;";
+            string receivedQuery = "UPDATE Messages SET Receiver = @user WHERE Receiver = @user2;";
             SqlConnection dbcon = new SqlConnection(connectionString);
             using (dbcon)
             {
                 dbcon.Open();
                 var updateUser = dbcon.Query(accountQuery, new { user = usernameNEW, user2 = User2 });
+                var updateSend = dbcon.Query(sendQuery, new { user = usernameNEW, user2 = User2 });
+                var updateReceived = dbcon.Query(receivedQuery, new { user = usernameNEW, user2 = User2 });
             }
         }
 
@@ -181,10 +185,7 @@ namespace Beacon
                 var passInsertion = dbcon.Query(passQuery, new { name = Name, pass = Pass1 });
             }
             Console.WriteLine($"The user {Name} has been created.");
-            Console.WriteLine("Please reopen the application to login with your credentials.");
-            Console.WriteLine("Press ANY key to terminate:");
-            Console.ReadKey();
-            Environment.Exit(0);
+
         }
 
         static internal bool CredentialCheck(string Username)
