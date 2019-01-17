@@ -48,9 +48,11 @@ namespace Beacon
             Console.WriteLine("Please type your message. (Limit = 250 characters)");
             string textMessage = Console.ReadLine();            
 
-            BaseInteraction.SendMessage(Username, User2, textMessage);
+            int stamp =  BaseInteraction.SendMessage(Username, User2, textMessage);
             Console.Clear();
             View(User2);
+            Data lastSended = BaseInteraction.GetLastSended(stamp);
+            TextOutput.NewText(lastSended);
         }
 
         public void View(string User2)

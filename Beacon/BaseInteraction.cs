@@ -9,7 +9,7 @@ namespace Beacon
 {
     class BaseInteraction
     {
-        static string connectionString = "Server=LAPTOP-GFPB19JQ\\SQLExpress;Database=Beacon;Integrated Security=true;";
+        static string connectionString = Properties.Settings.Default.connectionString;
         
 
         static internal void PassChange(string Pass1, string Username)
@@ -23,13 +23,28 @@ namespace Beacon
             Console.WriteLine("Your password has been successfully changed!");
         }
 
-        static internal void SendMessage(string Username, string User2, string textMessage)
+        static internal int SendMessage(string Username, string User2, string textMessage)
         {
             string queryMessage = "INSERT INTO Messages (Sender, Receiver, Submission, Message) VALUES (@Sender, @Receiver, @Submission, @Message);";
+            string getStamp = "SELECT Stamp FROM Messages WHERE Message = @message AND Submission = @submission;";
+            DateTime timeSent = DateTime.UtcNow;
             SqlConnection dbcon = new SqlConnection(connectionString);
             using (dbcon)
             {
-                var sendMessage = dbcon.Query(queryMessage, new { Sender = Username, Receiver = User2, Submission = DateTime.UtcNow, Message = textMessage });
+                var sendMessage = dbcon.Query(queryMessage, new { Sender = Username, Receiver = User2, Submission = timeSent, Message = textMessage });
+                return dbcon.Query<int>(getStamp, new { message = textMessage, submission = timeSent }).Single();
+            }
+        }
+
+        static internal Data GetLastSended(int stamp)
+        {
+            //var message = new List<Data>();
+            string lastMessageGet = "SELECT * FROM Messages WHERE Stamp = @number;";
+            SqlConnection dbcon = new SqlConnection(connectionString);
+            using (dbcon)
+            {
+                Data message = dbcon.Query<Data>(lastMessageGet, new { number = stamp }).First();
+                return message;
             }
         }
 
