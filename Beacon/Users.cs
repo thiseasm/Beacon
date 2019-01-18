@@ -92,10 +92,12 @@ namespace Beacon
             {
                 Console.WriteLine("Please type your message. (Limit = 250 characters)");
                 string textMessage = Console.ReadLine();
-                BaseInteraction.EditMessage(textMessage, sender, receiver, stampSelected);
+                BaseInteraction.EditMessage(textMessage, sender, receiver, stampSelected);                
                 Console.Clear();
                 Console.WriteLine("Message has been altered!");
                 View(User2);
+                Data message = BaseInteraction.GetLastSended(stampSelected);
+                TextOutput.EditText(message);
             }
             else
             {

@@ -38,13 +38,11 @@ namespace Beacon
 
         static internal Data GetLastSended(int stamp)
         {
-            //var message = new List<Data>();
             string lastMessageGet = "SELECT * FROM Messages WHERE Stamp = @number;";
             SqlConnection dbcon = new SqlConnection(connectionString);
             using (dbcon)
             {
-                Data message = dbcon.Query<Data>(lastMessageGet, new { number = stamp }).First();
-                return message;
+                return dbcon.Query<Data>(lastMessageGet, new { number = stamp }).First();
             }
         }
 
